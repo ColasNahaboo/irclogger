@@ -152,6 +152,11 @@ irclogger_totwiki [bash]
     irclogger_totwiki channel date selected < log
     Pretty-prints in a text form incluable in TWiki (see http://twiki.org)
 
+irclogger_totext [bash]
+    irclogger_totwiki channel date selected < log
+    prints only the contents without control messages and nicknames
+    useful for getting meeting notes by a single scribe + correcters
+
 irclogger_logs [bash, cgi]
     irclogger_logs/channel
     lists all available days in channel

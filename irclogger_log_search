@@ -9,7 +9,7 @@ search="${search//\\\\,/,}";search="${search//\\\\;/;}"
 action="$FORM_action"
 opterrors="-$FORM_error"
 unset chkerror;if [ -n "$FORM_error" ]; then chkerror[$FORM_error]=checked
-else chkerror[1]=checked
+else chkerror[0]=checked
 fi
 if [ -n "$FORM_verbatim" ]; then optverb="-iO -0 -k";opterrors=
 chkverbatim=checked
@@ -40,7 +40,7 @@ form () {
 <body>
 <h1>#$CHAN irc log search</h1>
 $locked
-<a href='${SCRIPT_NAME%/*}/irclogger_logs/$CHAN'>back</a>
+<a href='${SCRIPT_NAME%/*}/irclogger_logs/$CHAN'>&uarr;back</a>
 <form>
   <input type=text name=search value='$PREVSEARCH' size=48>
   <input type=submit value=Search>
@@ -102,7 +102,7 @@ search () {
       ofile="$file"
       date="${file%.log*}"
       let num1=num-4
-      echo "<br>&nbsp;<a href=${SCRIPT_NAME%/*}/irclogger_log/$CHAN?date=${date}&sel=$num#l$num1>$num</a>&nbsp;<small>"
+      echo "<br>&nbsp;<a href='${SCRIPT_NAME%/*}/irclogger_log/$CHAN?date=${date}&sel=$num#l$num1'>$num</a>&nbsp;<small>"
       echo "$rest"|sed -e 's/&/\&amp;/g' -e 's/</\&lt;/g'
       echo "</small>"
       let matches=matches+1

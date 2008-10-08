@@ -1,8 +1,10 @@
 # A sample script to monitor if the bot has been diconnected somehow without
-# noticing
-# 
+# noticing: the bot thus still runs but is not connected anymore
+# set the 3 variables below, and run this cript in your crontab (every 10mn?)
+# useful on public networks, not needed on intranets
+# needs the "irc" command in path
 
-server=capek.freenode.net
+server=irc.freenode.net
 botname='[LOGGER]'
 logs=/www/twikiirc/logs
 
@@ -12,4 +14,13 @@ fgrep $logs| (while read p r;do  kill $p;done )
   date >>$logs/irclogger-restarts.log
 }
 
-/usr/local/irclogger/irclogger-test-nickname-available $server itn$$ . . "$botname" | (read line; case "$line" in *exceptions.SystemExit:0*) kill_bot;;esac)
+tmp=/tmp/irclogger-check.$$
+(sleep 59;echo /quit)|irc -d  "$botname" $server >$tmp 2>&1
+if fgrep -sqi 'Nickname is already in use' $tmp; then
+   :        # nickname is there, bot is running
+elif fgrep -sqi 'Welcome to' $tmp; then
+   kill_bot # we could log in, we need to restart the bot
+else
+   :        # connection failed, do nothing
+fi
+rm -f $tmp

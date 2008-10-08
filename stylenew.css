@@ -4,6 +4,7 @@ html body {font-size: 80%;font-family:verdana,arial,geneva,helvetica,sans-serif;
 html body p {line-height: 1.2}
 html code, html kbd, html tt, html samp, html pre {font: 100% monospace}
 html big, html large {font-size: 115%}
+html table {font-size: 100%}
 html small, html sub, html sup {font-size: 85%}
 html h1 {font: bold 201% sans-serif}
 html h2 {font: bold 152% sans-serif;margin-bottom:0.50em}
@@ -21,5 +22,6 @@ html .headline {font-size:201%;font-weight:bold;}
 html .topicTitleBig {font-size: 115%}
 html .topicTitleSmall {font-size: 085%}
 html .topicItem {font-size: 085%}
+html span.weekend {font-size:85%; color:#555555}
 
 html ul {margin-top:0.3em}

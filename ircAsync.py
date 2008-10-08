@@ -97,7 +97,7 @@ class T(asynchat.async_chat):
         self.todo([NICK, self.nick])
         self.todo([USER, self.userid, "+iw", self.nick], self.fullName)
     def handle_close (self):
-        debug('socket closed')
+        #debug('socket closed')
         self.close()
 
     # asynchat methods

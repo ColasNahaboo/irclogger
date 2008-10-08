@@ -7,6 +7,10 @@ SUNDAY=`date -d '1970/01/04' +'%a'`
 
 CHAN=${PATH_INFO#/}
 . irclogger_common
+cachedir="${cachedir:-/tmp/.irclogger_logs_cache}"
+if test "x$CHAN" = "x."; then rm -rf "$cachedir"
+  echo "Location: ${SCRIPT_NAME}"; echo; exit 0
+fi
 
 if test ! -d $logsdir/$CHAN; then
   echo 'Content-type: text/html; charset: ISO-8859-1';echo
@@ -37,8 +41,8 @@ Content-type: text/html; charset: ISO-8859-1
   </head>
   <body>
     <h1>#${CHAN} irc log</h1>$locked
-<a href=${SCRIPT_NAME%/*}/irclogger_logs>back</a>
-<a href=${SCRIPT_NAME%/*}/irclogger_log_search/$CHAN>Search</a>
+<a href='${SCRIPT_NAME%/*}/irclogger_logs'>&uarr;back</a>
+<a href='${SCRIPT_NAME%/*}/irclogger_log_search/$CHAN'>Search</a>
 $MESS
 <p>Files are stored in raw text in MIRC format by 
 <a href='http://koala.ilog.fr/irclogger'>irclogger</a>
@@ -48,8 +52,8 @@ $MESS
 $(cat)
 </ul>
     <hr>
-<a name=end href=${SCRIPT_NAME%/*}/irclogger_logs>back</a>
-<a href=${SCRIPT_NAME%/*}/irclogger_log_search/$CHAN>Search</a>
+<a name=end href='${SCRIPT_NAME%/*}/irclogger_logs'>&uarr;back</a>
+<a href='${SCRIPT_NAME%/*}/irclogger_log_search/$CHAN'>Search</a>
 </body>
 </html>
 EOF
@@ -75,7 +79,7 @@ if [ -z "$CHAN" ]; then
       case "$protected_chans" in *" $chan "*)
 	if protectable "$chan";then auth=_a; lock="$private_image";fi;; 
       esac
-      echo "<li><a href='irclogger_logs$auth/$chan'>$chan</a> $lock"
+      echo "<li><a href='irclogger_logs$auth/$chan'>$chan</a> $lock (<a href='${SCRIPT_NAME%/*}/irclogger_log/$chan'>today log</a>)"
     fi
   done
   echo "</ul></tt><hr><small><i><a href='http://koala.ilog.fr/irclogger'>irclogger</a></i></small></body></html>"
@@ -97,26 +101,46 @@ else
   locked=
 fi
 
-todaydate="`date -u +'%Y-%m-%d,%a'`"
+todaydate="`date -u +'%Y-%m-%d'`"
 oldweek=`date -u +'%V'`
 
-ls -1 *.log* | sort -r | while read log; do 
-date=${log%%.*};day="${date##*,}";ymd="${date%%,*}"
-week=`date -d $ymd +'%V'`
-if [ $oldweek != $week ]; then echo '</ul><ul>';fi
-oldweek=$week
-if [ $day = Sun -o $day = Sat ]
-then ss='<small style="color:#555555">';es='</small>'
-else ss=;es=
-fi
-lines="$(wc -l $log|sed -e 's/ *\([^ ]*\).*/\1/')"
-echo "<li>$ss$ymd, <tt>$day</tt> <small>($lines lines)</small>"
-echo " : <a href=${SCRIPT_NAME%/*}/irclogger_log/$CHAN?date=$date>html</a> /"
-echo " <a href=${SCRIPT_NAME%/*}/irclogger_log/$CHAN?date=$date&raw=on>raw text</a> /"
-echo " <a href=${SCRIPT_NAME%/*}/irclogger_log/$CHAN?date=$date&twiki=on>twiki</a>"
-echo "$es"
-if test "$ymd" = "$todaydate"; then echo " <b>(today)</b>";fi
+#cache is lines: L[YYYYMMDD]="html-of-entry"
+ccahedirchan="${cachedir}`/bin/pwd`"
+if test ! -d "$ccahedirchan"; then mkdir -p "$ccahedirchan"; fi
+oldcache="$ccahedirchan/logs"
+newcache="$ccahedirchan/logs.$$"
+if test -e "$oldcache"; then source "$oldcache";fi
+
+#important: all log entries must be on a single line
+ls -1r *.log* | while read log; do 
+  ymd="${log%%,*}";num="${ymd//-/}"
+  if test -n "${L[num]}"; then #cached
+    echo "${L[num]}"; echo "L[$num]=\"${L[num]}\"" >>"$newcache"
+  else
+    date=${log%%.*};day="${date##*,}"
+    week=`date -d $ymd +'%V'`;weeksep=
+    if [ $oldweek != $week ]; then weeksep='</ul><ul>'
+    fi
+    oldweek=$week
+    if [ $day = Sun -o $day = Sat ]
+    then ss='<span class=weekend>';es='</span>'
+    else ss=;es=
+    fi
+    lines="$(wc -l $log|sed -e 's/ *\([^ ]*\).*/\1/')"
+    url="${SCRIPT_NAME%/*}/irclogger_log/$CHAN?date=$date"
+    entry="$weeksep<li>$ss<a href='$url'>$ymd</a>, <tt>$day</tt> <small>($lines lines)</small> (alternate forms: <a href='${SCRIPT_NAME%/*}/irclogger_log/$CHAN?date=$date&raw=on'>raw text</a>, <a href='${SCRIPT_NAME%/*}/irclogger_log/$CHAN?date=$date&twiki=on'>twiki syntax</a>, <a href='${SCRIPT_NAME%/*}/irclogger_log/$CHAN?date=$date&text=on'>contents only</a>)$es"
+    if test "$entry" = "$cached_entry"; then
+      cat "$oldcache"; rm -f "$newcache"; break
+    fi
+    if test "$ymd" = "$todaydate"; then 
+      entry="$entry <b>(today)</b>"
+    else
+      echo "L[$num]=\"$entry\"" >>"$newcache"
+    fi
+    echo "$entry"
+  fi
 done | page
+if test -e "$newcache";then mv "$newcache" "$oldcache"; fi
 
 ### EMACS MODES
 ### Local Variables: ***

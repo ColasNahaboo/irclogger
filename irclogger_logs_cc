@@ -1,0 +1,30 @@
+#!/bin/bash
+# irclogger v1.1
+set -a
+
+. irclogger_common
+cachedir="${cachedir:-/tmp/.irclogger_logs_cache}"
+rm -rf "$cachedir"
+
+page () {
+  cat << EOF	
+Content-type: text/html; charset: ISO-8859-1
+
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+  <head>
+    <title>Cache cleared</title>
+    <style type='text/css'> $STYLE </style>
+  </head>
+  <body>
+    <h1>Cache cleared</h1>
+Cache directory <tt>"$cachedir"</tt> cleared
+<hr>
+<a href='${SCRIPT_NAME%/*}/irclogger_logs'>&uarr;back</a>
+</body>
+</html>
+EOF
+}
+
+page
+

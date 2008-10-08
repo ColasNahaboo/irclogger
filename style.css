@@ -25,10 +25,12 @@ h6 {font: 16px sans-serif}
 .topicItem {font-size: 14px}
 
 /* general */
-body {background : %KSCOLORBG%; color: black;}
+body {background : #eeeeee; color: black;}
 td.contents {margin-left:10}
 .none {display:none}
 dt { font-weight: bold;float: left;display:inline;margin-right: 1em}
 dd { display:block; margin-left: 2em}
 dl.block dt {float: none;display:block;margin-right: 0em}
 dl.signature dd {margin-left: 30em}
+
+span.weekend {font-size:14px; color:#555555}

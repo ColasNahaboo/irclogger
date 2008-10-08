@@ -3,6 +3,30 @@ changed, and should be restarted after upgrade. Minor versions (1.8a, 1.8e) do
 not modify the python engine so upgrades are done  by just unpacking the
 distribution in place.
 
+1.10 02 Aug 2004
+    MANUAL STEPS for upgrade:
+     * from install dir; ln -s $PWD/{irclogger_logs_cc,irclogger_totext} $BIN
+    Minor change to the logger python bot: a debug message was still printed
+        when socket was closed.
+    install: typo in error message: ccho instead of echo
+    irclogger-check: rewrite as a simple invocation of "irc" for more 
+        robustness
+    direct link to today log (no ?date=) in list of channels
+    much faster directory listing with lots of logs (caches in 
+        /tmp/.irclogger_logs_cache, settable as conf var cachedir
+	(url)/irclogger_logs_cc clears the cache 
+    default value for approximate search tolerance is 0 (1 was confusing some)
+    new wording for logs list
+    new form: contents only, useful for minutes
+    in day html view, direct link to next and previous logs
+
+1.9b 19 Mar 2004
+    irclogger_log/<CHANNEL> now gives the current day log by a redirection
+        so that the URL shown in the browser is perennial
+
+1.9a 06 Jan 2004
+    Bugfix in html rendering: 1st line was skipped
+
 1.9  21 Nov 2003
     Change to the logger python bot: to disconnect the bot, the , or : after 
         logger name is now optional: you can say "[LOGGER] off", not just
