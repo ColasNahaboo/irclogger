@@ -30,4 +30,7 @@ allow search in multiple channels (shell-wilcardable list of dirs).
     take care of passwd-protected ones
 
 allow selecting start and end of select range in html form
-another parameter to restrict view to only selected range (without highlight)
+cropping: another parameter to restrict view to range (without highlight)
+allow range/sel to be seleted by time: HH:MM[.relativeline]
+make cropping work for text and twiki views
+

@@ -1,5 +1,5 @@
 #!/usr/bin/python
-VERSION = """IRC Logger python bot v1.8, http://koala.ilog.fr/irclogger"""
+VERSION = """IRC Logger python bot v1.9, http://koala.ilog.fr/irclogger"""
 # irclogger server nickname logsdir url [start_channels...]
 #           if args are "." they are replaced by default values
 
@@ -333,7 +333,7 @@ if __name__=='__main__':
       # NickNameQ is the re-quoted form of NickName for comparisons
       NickNameQ = re.sub("([][*+])", '[\\1]', NickName)
       nicknameRe = re.compile(NickNameQ, re.I)
-      commandRe = re.compile(NickNameQ + '[,:] *(.*)', re.I)
+      commandRe = re.compile(NickNameQ + '[,:]? *(.*)', re.I)
       main(server, int(port), chans)
    else: print sys.argv; print _doc
 

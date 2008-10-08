@@ -3,6 +3,10 @@ changed, and should be restarted after upgrade. Minor versions (1.8a, 1.8e) do
 not modify the python engine so upgrades are done  by just unpacking the
 distribution in place.
 
+1.9  21 Nov 2003
+    Change to the logger python bot: to disconnect the bot, the , or : after 
+        logger name is now optional: you can say "[LOGGER] off", not just
+	"[LOGGER]: off" or "[LOGGER], off"
 1.8e 15 Nov 2003
     dates in URLs can now omit the day of week part:
         ...irclogger_log/twiki?date=2003-11-14 is sufficient, no need
