@@ -1,0 +1,12 @@
+#!/bin/bash
+
+authname=`grep AuthName .htaccess`
+
+if [ "$REMOTE_USER" = /"$PATH_INFO" ]; then
+   echo "Location: ${SCRIPT_NAME%/*}/irclogger_logs$PATH_INFO";echo;exit 0
+else
+  echo 'HTTP/1.0 401 Unauthorized'
+  echo "WWW-Authenticate: Basic realm=${authname#* }"
+  echo
+  exit 0
+fi

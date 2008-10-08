@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# host[:port]
+host=localhost
+# use the same as in your irclogger.conf file in BIN cgi-bin dir
+# errors of this bot will go in $logsdir/irclogger.log
+logsdir="_LOGS_"
+# URL where to go to see web logs
+url="_URL_"
+# initial channels to log. can be empty. Be cautious in putting more than one,
+# or you could be kicked on connecting for flooding!
+channels="_CHAN_"
+
+while true; do
+    echo "Starting at `date`" >>"$logsdir/irclogger.log"
+    /usr/local/irclogger/irclogger $host '[LOGGER]' \
+	"$logsdir" "$url" $channels>>"$logsdir/irclogger.log" 2>&1 </dev/null
+    echo "Stopping at `date`" >>"$logsdir/irclogger.log"
+    sleep 45 # avoid being kicked for too fast reconnection. should be > 40s
+done

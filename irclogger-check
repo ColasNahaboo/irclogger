@@ -1,0 +1,15 @@
+# A sample script to monitor if the bot has been diconnected somehow without
+# noticing
+# 
+
+server=capek.freenode.net
+botname='[LOGGER]'
+logs=/www/twikiirc/logs
+
+kill_bot () {
+  ps awx|grep irclogger|grep python|fgrep $server| \
+fgrep $logs| ( read p r; kill $p )
+  date >>$logs/irclogger-restarts.log
+}
+
+/usr/local/irclogger/irclogger-test-nickname-available $server itn$$ . . "$botname" | (read line; case "$line" in *exceptions.SystemExit:0*) kill_bot;;esac)

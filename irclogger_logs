@@ -1,0 +1,122 @@
+#!/bin/bash
+# irclogger v1.1
+set -a
+
+# this depends on your locale
+SUNDAY=`date -d '1970/01/04' +'%a'`
+
+CHAN=${PATH_INFO#/}
+. irclogger_common
+
+if test ! -d $logsdir/$CHAN; then
+  echo 'Content-type: text/html; charset: ISO-8859-1';echo
+  echo "Cannot list channel $CHAN (no dir $logsdir/$CHAN)"
+  exit 0
+fi
+STYLE=
+cd $logsdir
+if [ -e style.css ]; then STYLE="`cat style.css`";fi
+cd $logsdir/$CHAN
+if [ -e style.css ]; then STYLE="$STYLE`cat style.css`";fi
+if [ -e message.html ]; then MESS="`cat message.html`"; fi
+
+lines () {
+  ls=`grep -v '^[[][0-9][0-9]:[0-9][0-9][]] [*][*][*] ' $1|wc -l`
+  let ln=ls;  echo $ln
+}
+
+page () {
+  cat << EOF	
+Content-type: text/html; charset: ISO-8859-1
+
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+  <head>
+    <title>#${CHAN} irc log</title>
+    <style type='text/css'> $STYLE </style>
+  </head>
+  <body>
+    <h1>#${CHAN} irc log</h1>$locked
+<a href=${SCRIPT_NAME%/*}/irclogger_logs>back</a>
+<a href=${SCRIPT_NAME%/*}/irclogger_log_search/$CHAN>Search</a>
+$MESS
+<p>Files are stored in raw text in MIRC format by 
+<a href='http://koala.ilog.fr/irclogger'>irclogger</a>
+<br>$passwd_ops
+<hr>
+<ul>
+$(cat)
+</ul>
+    <hr>
+<a name=end href=${SCRIPT_NAME%/*}/irclogger_logs>back</a>
+<a href=${SCRIPT_NAME%/*}/irclogger_log_search/$CHAN>Search</a>
+</body>
+</html>
+EOF
+}
+
+#-----------------------------------------------------------------------------
+# list all channels if none given
+if [ -z "$CHAN" ]; then 
+  echo "Content-Type: text/html"; echo
+  echo "<!DOCTYPE HTML PUBLIC \"-//IETF//DTD HTML//EN\">"
+  echo "<html><head><title>Logs of IRC channels</title>
+    <meta http-equiv='Content-Type' content='text/html; charset=ISO-8859-1'>
+    <style type='text/css'> $STYLE </style>
+</head><body><h1>Logs of IRC Channels</h1> $MESS
+<p>$private_image indicates password-protected logs.
+<tt><ul>"
+  protected_chans=" "
+  while read line;do protected_chans="$protected_chans${line%%:*} "
+  done < "$passfile"
+  for chan in $(ls -1 .|sort -i|while read f;do if [ -d "$f" ]; then echo "$f";fi;done); do
+    auth=; lock=
+    if [ -d "$chan" ]; then
+      case "$protected_chans" in *" $chan "*)
+	if protectable "$chan";then auth=_a; lock="$private_image";fi;; 
+      esac
+      echo "<li><a href='irclogger_logs$auth/$chan'>$chan</a> $lock"
+    fi
+  done
+  echo "</ul></tt><hr><small><i><a href='http://koala.ilog.fr/irclogger'>irclogger</a></i></small></body></html>"
+  exit 0
+fi
+
+#-----------------------------------------------------------------------------
+# else list all logs in one chan
+
+#check perms
+if acces_protected "$CHAN"
+then passwd_ops="Logs of this channel are protected by a password that you can <a href='${SCRIPT_NAME%/*}/irclogger_password_a/$CHAN'>change</a>."
+  locked="$private_image<p>"
+else 
+  if protectable "$CHAN"
+  then passwd_ops="Logs of this channel are not protected. You can <a href='${SCRIPT_NAME%/*}/irclogger_password/$CHAN'>protect them by a password</a>."
+  else passwd_ops="Public logs."
+  fi
+  locked=
+fi
+
+todaydate="`date +'%Y-%m-%d,%a'`"
+oldweek=`date +'%V'`
+
+ls -1 *.log* | sort -r | while read log; do 
+date=${log%%.*};day="${date##*,}";ymd="${date%%,*}"
+week=`date -d $ymd +'%V'`
+if [ $oldweek != $week ]; then echo '</ul><ul>';fi
+oldweek=$week
+if [ $day = Sun -o $day = Sat ]
+then ss='<small style="color:#555555">';es='</small>'
+else ss=;es=
+fi
+lines="$(wc -l $log|sed -e 's/ *\([^ ]*\).*/\1/')"
+echo "<li>$ss$ymd, <tt>$day</tt> <small>($lines lines)</small>"
+echo " : <a href=${SCRIPT_NAME%/*}/irclogger_log/$CHAN?date=$date>html</a> /"
+echo " <a href=${SCRIPT_NAME%/*}/irclogger_log/$CHAN?date=$date&raw=on>raw text</a>$es"
+if test "$ymd" = "$todaydate"; then echo " <b>(today)</b>";fi
+done | page
+
+### EMACS MODES
+### Local Variables: ***
+### mode:ksh ***
+### End: ***

@@ -1,0 +1,111 @@
+#!/bin/bash
+
+USAGE="${0##*/} BIN LOG PASS LOGURL CHANNEL
+Script to be run from /usr/local/irclogger
+Arguments:
+  BIN (directory) where to put the CGI files for the web logs
+		  e.g.: /var/www/irclogger-cgi
+  LOG (directory) where the logs will be stored
+		  e.g.: /var/log/irclogger
+  PASS (file)     where password wil be stored
+		  e.g.: /var/www/auth/irclogger-htpasswd
+  LOGURL (url)    where to access the BIN dir from the web
+		  e.g.: http://my.site.com/irclogger
+  CHANNEL (name)  channel to monitor on startup. can be empty 
+		  (none will be monitored)
+"
+
+case $# in 4|5 ) : ;; *) echo "$USAGE"; exit 1;; esac
+
+BIN="$1"
+LOG="$2"
+PASS="$3"
+LOGURL="$4"
+CHANNEL="$5"
+S=`pwd`
+
+main () {
+  if ! -e htaccess.sample; then abort "Please run me from irlogger directory";fi
+  create_dirs "$BIN" "$LOG"
+  create_files "$PASS"
+  if test ! -e "$BIN/.htaccess"; then 
+    sed -e 's/AuthUserFile .*/AuthUserFile $PASS/' <htaccess.sample >"$BIN/.htaccess"
+  fi
+  install_bashlib
+  ln -fs $S/irclogger_* $S/nph-irclogger_reset_auth "$BIN"
+  create_irclogger_conf
+  echo 'deny from all' >"$LOG"/.htaccess
+  cd "$BIN"
+  for i in logs password log log_search 
+  do ln -s irclogger_${i} irclogger_${i}_a; done
+  create_run
+  echo '============================================================'
+  echo "Now:"
+  echo "cp irclogger-run /usr/local/bin/irclogger-run      (with a postfix?)"
+  echo "refer to logs by:"
+  echo "<a href='$LOGURL/irclogger_logs/XXX'>IRC log for channel #XXX</a>"
+  apache_check
+}
+
+abort () {
+  eccho "ERROR: $*"; exit 2
+}
+
+apache_check () {
+  if grep -q "ScriptAlias .* $BIN" /etc/apache/httpd.conf; then :; else
+    echo "Add to you apache config (/etc/apache/httpd.conf)"
+    d="/${URL#*//*/}"
+    echo "  ScriptAlias $d $BIN
+  <Location $d>
+    AllowOverride All
+  </Location>"
+  fi
+}
+
+install_bashlib () {
+  if test ! -e "$BIN/bashlib"; then
+    rm -rf bashlib-0.4
+    tar xfz bashlib-0.4.tar.gz
+    cd bashlib-0.4
+    ./configure
+    cp bashlib "$BIN"
+    cd ..
+    rm -rf bashlib-0.4
+  fi
+}
+create_irclogger_conf () {
+  if test ! -e "$BIN/irclogger.conf"; then
+    cat >"$BIN/irclogger.conf" << EOF 
+logsdir=$LOG
+passfile=$PASS
+EOF
+  fi
+}
+
+create_run () {
+  sed -e 's|_LOGS|$LOG|' -e 's|_URL_|$URL|' -e 's|_CHAN_|$CHANNEL|' <irclogger-run.sample >irclogger-run
+  chmod a+x irclogger-run
+}
+
+create_files () {
+  local i
+  for i in "$@"; do 
+    if test ! -f "$i"; then 
+      if touch "$i"; then :; else abort "Cannot create file $i"; fi
+    fi
+    chmod a+rw "$i"
+  done
+}
+
+create_dirs () {
+  local i
+  for i in "$@"; do 
+    if test ! -d "$i"; then 
+      if mkdir -p "$i"; then :; else abort "Cannot create directory $i"; fi
+    fi
+    chmod a+rwx "$i"
+  done
+}
+
+
+main

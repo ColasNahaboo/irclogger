@@ -1,0 +1,34 @@
+/* koala CSS */
+
+/* see: http://www.richinstyle.com/masterclass/fonts.html */
+@import url(stylenew.css);
+/* Buggy browsers: avoid em */
+body {font-size: 16px;font-family:verdana,arial,geneva,helvetica,sans-serif;}
+code, kbd, tt, samp, pre {font: 16px /* 16*.9 */ monospace}
+big, large {font-size: 18px}
+small, sup, sub {font-size: 14px}
+h1 {font: 32px sans-serif}
+h2 {font: 28px sans-serif}
+h3 {font: 24px sans-serif}
+h4 {font: 21px sans-serif}
+h5 {font: 18px sans-serif}
+h6 {font: 16px sans-serif}
+
+.footer{font-size: 14px}
+.small{font-size: 14px}
+.xsmall{font-size: 12px}
+.buttonBar{font-size: 14px; font-weight: bold;}
+.title {font-size: 18px; font-weight: bold;}
+.headline {font-size:32px;font-weight:bold;}
+.topicTitleBig {font-size: 18px}
+.topicTitleSmall {font-size: 14px}
+.topicItem {font-size: 14px}
+
+/* general */
+body {background : %KSCOLORBG%; color: black;}
+td.contents {margin-left:10}
+.none {display:none}
+dt { font-weight: bold;float: left;display:inline;margin-right: 1em}
+dd { display:block; margin-left: 2em}
+dl.block dt {float: none;display:block;margin-right: 0em}
+dl.signature dd {margin-left: 30em}

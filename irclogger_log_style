@@ -1,0 +1,231 @@
+#!/bin/bash
+# generates a CSS file for an IRC log
+# takes a file NAMES with nicknames:
+# nicknames for the same person on the same line (blank-separated)
+# comments as lines beginning by a #
+# and varies the hue around the color wheel
+# The saturation and value are fixed, in the var $satval
+set -a
+satval=ff77
+
+CHAN="${PATH_INFO#*/}"
+file="${CHAN##*/}"
+CHAN="${CHAN%%/*}"
+
+. irclogger_common
+DIR=$logsdir/$CHAN
+
+page () {
+  cat << EOF	
+Content-type: text/css; charset: ISO-8859-1
+
+/* IRC log CSS for names */
+EOF
+}
+
+cd $DIR
+page
+
+main () {
+  generate_rgb2hsvhex; generate_hsv2rgbhex
+  names=`zgrep '^[^]]*[]] <' "$file" |sed -e 's/[^ ]* <//' -e 's/>.*//'|sort -i|uniq`
+  numlines=`echo "$names" | wc -l`
+  let hue_delta='2560/numlines'
+  hue=0
+  huehex=00
+
+  for nick in $names ;do
+    echo "td.$nick {color: #`hsv2rgb $huehex$satval`}"
+    let hue=hue+hue_delta
+    let huei=hue/10
+    huehex=${hex[huei]}
+  done
+}
+
+###################################################################### COLORS
+rgb2hsv=/tmp/rgb2hsvhex
+hsv2rgb=/tmp/hsv2rgbhex
+rgb2hsv () {
+  $rgb2hsv "$@"
+}
+hsv2rgb () {
+  $hsv2rgb "$@"
+}
+
+colorname2rgb () {
+  grep -i "^[ 	]*[0-9][0-9]*[ 	][ 	]*[0-9][0-9]*[ 	][ 	]*[0-9][0-9]*[ 	][ 	]*$1"'$' /usr/X11R6/lib/X11/rgb.txt | ( read R G B rest; 
+  echo "${hex[$R]}${hex[$G]}${hex[$B]}"
+  if [ -z "$B" ]; then echo "Error: colorname not found: $1" >&2; exit 1; fi
+  if $verbose; then echo "$1: ($R,$G,$B): ${hex[$R]}${hex[$G]}${hex[$B]}" 1>&2; fi
+  )
+}
+
+tolower () {
+  echo "$1" | tr '[A-Z]' '[a-z]'
+}
+
+
+hex=(00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F 10 11 12 13 14 15 16 17 18 19 1A 1B 1C 1D 1E 1F 20 21 22 23 24 25 26 27 28 29 2A 2B 2C 2D 2E 2F 30 31 32 33 34 35 36 37 38 39 3A 3B 3C 3D 3E 3F 40 41 42 43 44 45 46 47 48 49 4A 4B 4C 4D 4E 4F 50 51 52 53 54 55 56 57 58 59 5A 5B 5C 5D 5E 5F 60 61 62 63 64 65 66 67 68 69 6A 6B 6C 6D 6E 6F 70 71 72 73 74 75 76 77 78 79 7A 7B 7C 7D 7E 7F 80 81 82 83 84 85 86 87 88 89 8A 8B 8C 8D 8E 8F 90 91 92 93 94 95 96 97 98 99 9A 9B 9C 9D 9E 9F A0 A1 A2 A3 A4 A5 A6 A7 A8 A9 AA AB AC AD AE AF B0 B1 B2 B3 B4 B5 B6 B7 B8 B9 BA BB BC BD BE BF C0 C1 C2 C3 C4 C5 C6 C7 C8 C9 CA CB CC CD CE CF D0 D1 D2 D3 D4 D5 D6 D7 D8 D9 DA DB DC DD DE DF E0 E1 E2 E3 E4 E5 E6 E7 E8 E9 EA EB EC ED EE EF F0 F1 F2 F3 F4 F5 F6 F7 F8 F9 FA FB FC FD FE FF)
+
+generate_rgb2hsvhex () {
+    if [ -x $rgb2hsv ]; then return
+    fi
+    rm -rf $rgb2hsv ${rgb2hsv}.c
+    cat > ${rgb2hsv}.c << \EOF
+/* code stolen from GTK */
+#include <math.h>
+
+#define MIN(a,b) (a<b?a:b)
+#define MAX(a,b) (a>b?a:b)
+#define NO_HUE   -1
+
+/* Input:   r, g, b as hex-webstring
+   Outputs: h, s, v as hex-webstring
+*/
+gtk_color_selection_rgb_to_hsv (double  r, double  g, double  b,
+				double *h, double *s, double *v)
+{
+  double max, min, delta;
+
+  max = r;
+  if (g > max)
+    max = g;
+  if (b > max)
+    max = b;
+
+  min = r;
+  if (g < min)
+    min = g;
+  if (b < min)
+    min = b;
+
+  *v = max;
+
+  if (max != 0.0)
+    *s = (max - min) / max;
+  else
+    *s = 0.0;
+
+  if (*s == 0.0)
+    *h = -1.0;
+  else
+    {
+      delta = max - min;
+
+      if (r == max)
+	*h = (g - b) / delta;
+      else if (g == max)
+	*h = 2.0 + (b - r) / delta;
+      else if (b == max)
+	*h = 4.0 + (r - g) / delta;
+
+      *h = *h * 60.0;
+
+      if (*h < 0.0)
+	*h = *h + 360;
+    }
+}
+
+int main (int argc, char **argv)
+{
+    int ri, gi, bi, hi, si, vi;
+    double r, g, b, h, s, v;
+
+    if (argc == 2) {
+	sscanf(argv[1], "%2x%2x%2x", &ri, &gi, &bi);
+	r = ri; r /= 255;
+	g = gi; g /= 255;
+	b = bi; b /= 255;
+	gtk_color_selection_rgb_to_hsv(r, g, b, &h, &s, &v);
+	hi = (h/360)*255;
+	si = s*255;
+	vi = v*255;
+	printf("%02x%02x%02x\n", hi,si, vi);
+	return 0;
+    } else
+	return 1;
+}
+EOF
+    cc -O -o $rgb2hsv ${rgb2hsv}.c
+    chmod a+x $rgb2hsv; rm -f ${rgb2hsv}.c
+}
+
+generate_hsv2rgbhex () {
+    if [ -x $hsv2rgb ]; then return
+    fi
+    rm -rf $hsv2rgb ${hsv2rgb}.c
+    cat > ${hsv2rgb}.c << \EOF
+/* code stolen from GTK */
+#include <math.h>
+
+#define MIN(a,b) (a<b?a:b)
+#define MAX(a,b) (a>b?a:b)
+#define NO_HUE   -1
+
+/* Input:   r, g, b as hex-webstring
+   Outputs: h, s, v as hex-webstring
+*/
+void
+gtk_color_selection_hsv_to_rgb (double  h, double  s, double  v,
+				double *r, double *g, double *b) {
+  int i;
+  double f, w, q, t;
+
+  if (s == 0.0)
+    s = 0.000001;
+
+  if (h == -1.0) {
+      *r = v; *g = v; *b = v;
+    } else {
+      if (h == 360.0) h = 0.0;
+      h = h / 60.0;
+      i = (int) h;
+      f = h - i;
+      w = v * (1.0 - s);
+      q = v * (1.0 - (s * f));
+      t = v * (1.0 - (s * (1.0 - f)));
+
+      switch (i) {
+	case 0: *r = v; *g = t; *b = w; break;
+	case 1: *r = q; *g = v; *b = w; break;
+	case 2: *r = w; *g = v; *b = t; break;
+	case 3: *r = w; *g = q; *b = v; break;
+	case 4: *r = t; *g = w; *b = v; break;
+	case 5: *r = v; *g = w; *b = q; break;
+	}
+    }
+}
+
+int main (int argc, char **argv)
+{
+    int ri, gi, bi, hi, si, vi;
+    double r, g, b, h, s, v;
+
+    if (argc == 2) {
+	sscanf(argv[1], "%2x%2x%2x", &hi, &si, &vi);
+	h = hi * 360; h /= 255;
+	s = si; s /= 255;
+	v = vi; v /= 255;
+	gtk_color_selection_hsv_to_rgb(h, s, v, &r, &g, &b);
+	ri = r*255;
+	gi = g*255;
+	bi = b*255;
+	printf("%02x%02x%02x\n", ri, gi, bi);
+	return 0;
+    } else
+	return 1;
+}
+EOF
+    cc -O -o $hsv2rgb ${hsv2rgb}.c
+    chmod a+x $hsv2rgb; rm -f ${hsv2rgb}.c
+}
+
+
+###################################################################### MAIN
+
+main
+
+### EMACS MODES
+### Local Variables: ***
+### mode:ksh ***
+### End: ***

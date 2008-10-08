@@ -1,0 +1,13 @@
+AuthUserFile /var/www/passwds/irclogger-passwds
+AuthName "User name is the Channel, Password is the channel password"
+AuthType Basic
+
+Options ExecCGI FollowSymLinks 
+
+<Files ~ "irclogger.*_a$">
+  require valid-user
+</Files>
+
+<Files "*">
+  allow from all
+</Files>

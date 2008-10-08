@@ -1,0 +1,32 @@
+On quit (deconnection), save the list of currently logged chan to be
+relogged on restart
+
+interface with cgiirc:
+   * list logged chans in select box on start
+   * link to cgiirc to directly jump into a channel from web irclooger pages
+
+Allow uploading raw files to allow download/edit/upload sequence.
+See: http://starship.python.net/crew/lutz/Basics/putfile.html
+or by wiki-like edition:
+   * chan dirs and topdir are to be made a+rw (install, update, from irclogger)
+   * on edit, lock (ln to .lock file), copy buffer to memory, count lines N
+     store in hidden vars N & date
+     make it a+rw
+     create a a+rw .lockwho with IP date and other printable info
+     warn in interface to cancel lock, and that there is no backup
+     if locked print a message telling to go to admin with .lockwho contents
+     offer to break lock (remove .lock .lockwho)
+   * on save, check .lockwho for date if not, refuse to save, and propose to 
+     back in browser, copy/paste, do a merge by hand
+     save in another files .new then .oldlines (with N)
+     make them a+rw
+   * append chan name to a EDITS_PENDING file global for all chans
+   * irclogger, on tick look for EDITS_PENDING. if exists, remove it
+     then looks in all chanss listed in it 
+     for all .oldlines files and perform the merge:
+     .new + (.log - N), then remove .new & .oldlines and .lock
+     (inside a while loop looking for EDITS_PENDING existence)
+
+allow search in multiple channels (shell-wilcardable list of dirs)
+allow grep via fgrep / egrep / agrep
+man page as html page

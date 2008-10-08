@@ -1,0 +1,52 @@
+# common file loaded by the bash irclogger_* files
+# should be called from the BIN (cgi-bin) dir
+
+conffile="${conffile:-irclogger.conf}"
+if test -e "$conffile"; then
+  . "$conffile"
+  case "$conffile" in /*) :;; *) conffile="$PWD/$conffile";;
+  esac
+fi
+logsdir=${logsdir:-/var/log/irclogger}
+passfile=${passfile:-/var/www/passwds/irclogger-passwds}
+private_image="${private_image:-<img src='http://koala.ilog.fr/qbullets/private.gif' width=11 height=10 alt='Password-protected log'>}"
+
+nl='
+'
+
+# $1=chan / return true if protected, false if free access
+acces_protected () {
+  if protectable "$1"; then
+    protected_chans="`echo;cat $passfile`"
+    case "$protected_chans" in 
+      *"$nl$1:"*)  case "$SCRIPT_NAME" in 
+	*_a) if [ "${REMOTE_USER#[#]}" != "$1" ]; then
+	  wrong_user "${REMOTE_USER#[#]}" "$1"
+          fi ;;
+	*) if [ -n "$QUERY_STRING" ]; then qs="?$QUERY_STRING"
+           fi
+	   echo "Location: ${SCRIPT_NAME}_a/$1$qs";echo;exit 0 ;;
+        esac
+        return 0;;
+      *) return 1;;
+    esac
+  else
+    return 1
+  fi
+}
+
+# $1=logged_as_user $2=chan
+wrong_user () {
+  echo "Location: ${SCRIPT_NAME%/*}/nph-irclogger_reset_auth/$2";echo;exit 0
+}
+
+# $1=channel, returns true if can be protected
+protectable () {
+  if [ -e "$logsdir/$1/PUBLIC" ]; then return 1; else return 0
+  fi
+}
+
+### EMACS MODES
+### Local Variables: ***
+### mode:ksh ***
+### End: ***

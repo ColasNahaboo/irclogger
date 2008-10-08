@@ -1,0 +1,91 @@
+#!/bin/bash
+set -a
+. bashlib
+. irclogger_common
+PATH="$PATH:/usr/local/bin:$PWD"
+GCF=4
+
+date=`param date`
+raw=`param raw`
+sel=`param sel`
+CHAN=${PATH_INFO#/}
+CHAN=${CHAN:-main}
+
+if test ! -d $logsdir/$CHAN; then
+  echo 'Content-type: text/html; charset: ISO-8859-1';echo
+  echo "Cannot list channel $CHAN (no dir $logsdir/$CHAN)"
+  exit 0
+fi
+STYLE=
+cd $logsdir
+if [ -e style.css ]; then STYLE="`cat style.css`";fi
+cd $logsdir/$CHAN
+if [ -e style.css ]; then STYLE="$STYLE`cat style.css`";fi
+
+gzip=off;case "$HTTP_ACCEPT_ENCODING" in *gzip*)gzip=on;;esac
+
+#check perms
+if acces_protected "$CHAN"
+then header="$private_image Logs of this channel are protected by a password that you can <a href='${SCRIPT_NAME%/*}/irclogger_password_a/$CHAN'>change</a>.<p>"
+else 
+  if protectable "$CHAN"
+  then header="Logs of this channel are not protected. You can <a href='${SCRIPT_NAME%/*}/irclogger_password/$CHAN'>protect them by a password</a>.<p>"
+  else header=
+  fi
+fi
+
+if [ -z "$date" ]; then date="`date +'%Y-%m-%d,%a'`"
+fi
+log=$date.log
+if [ ! -e $log ]; then 
+  log=$date.log.gz
+  if [ ! -e $log ]; then cat << EOF	
+Content-type: text/html
+
+<!DOCTYPE HTML PUBLIC \"-//IETF//DTD HTML//EN\">
+<html><head><title>ERROR</title>
+    <meta http-equiv='Content-Type' content='text/html; charset=ISO-8859-1'>
+    <style type='text/css'> $STYLE </style>
+</head><body><h1>ERROR</h1>  File <tt>$date.log</tt> not found!!!
+</body></html>
+EOF
+exit 0
+  fi
+fi
+
+if [ "$raw" = on ]; then
+  if [ "$gzip" = on ]; then
+    echo "Content-Type: text/plain"; echo "Content-Encoding: gzip"; echo
+    case "$log" in 
+      *.gz ) cat $log;; 
+      *) gzip -$GCF < $log;; 
+    esac 
+  else
+    echo "Content-Type: text/plain"; echo
+    case "$log" in
+      *.gz ) zcat $log;;
+      *) cat $log;;
+    esac
+  fi
+else
+  if [ "$gzip" = on ]; then
+    echo "Content-Type: text/html"; echo "Content-Encoding: gzip"; echo
+    case "$log" in 
+      *.gz ) zcat $log|irclogger_tohtml $CHAN $date "$sel" "$conffile" "$header" "$log"|gzip -$GCF;;
+      *) cat $log|irclogger_tohtml $CHAN $date "$sel" "$conffile" "$header" "$log"|gzip -$GCF;;
+    esac 
+  else
+    echo "Content-Type: text/html"; echo
+    case "$log" in
+      *.gz ) zcat $log|irclogger_tohtml $CHAN $date "$sel" "$conffile" "$header" "$log";;
+      *) cat $log|irclogger_tohtml $CHAN $date "$sel" "$conffile" "$header" "$log";;
+    esac
+  fi
+fi
+
+exit 0
+
+### EMACS MODES
+### Local Variables: ***
+### mode:ksh ***
+### End: ***

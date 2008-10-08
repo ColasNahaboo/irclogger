@@ -1,0 +1,126 @@
+#!/bin/bash
+# $1=channel $2=date('%Y-%m-%d,%a') $3=selected_line $4=config_file $5=header
+# $6=filename
+set -a
+
+CHAN=$1
+if test -e "$4"; then conffile="$4"; . "${conffile%/*}/irclogger_common"
+else logsdir=${logsdir:-/var/log/irclogger}
+fi
+
+case "$6" in /*)logfile="$6";; *)logfile="$PWD/$6";;
+esac
+cd $logsdir
+DEFSTYLE='
+body {background-color: #ffffff;font: 80% verdana,arial,geneva,helvetica,sans-serif;}
+tr.even {background-color: #f0f0f0}
+tr.odd {background-color: #e0e0e0}
+tr.sep {background-color: #c0c0c0}
+td.legend {color: #606060;font: 80%}
+tr.irc {background-color:    #f7f7f7; font: 80% sans-serif;color: #707070}
+tr.selected {background-color:  #ffffa5; border:solid;
+	   font: bold 100% sans-serif;color #593a3a }
+'
+STYLE=
+if [ -e style.css ]; then STYLE="$STYLE `cat style.css`"
+fi
+if [ -e $CHAN/style.css ]; then STYLE="$STYLE `cat $CHAN/style.css`"
+fi
+if [ -z "$STYLE" ]; then STYLE="$DEFSTYLE"
+fi
+
+actions="<table width='100%'><tr><td><a href='${SCRIPT_NAME%/*}/irclogger_logs/${1}'>back</a> <a href='${SCRIPT_NAME%/*}/irclogger_log_search/$1'>Search</a><td class=legend align=right>(Click on time to select a line by its url)</table>"
+
+echo "<html>
+  <head>
+    <title>#$1 $2</title>
+    <style type='text/css'> $STYLE </style>
+    <link rel=stylesheet href='${SCRIPT_NAME%/*}/irclogger_log_style/$1/${logfile##*/}'>
+  </head>
+  <body>
+  <h1>#$1 $2</h1>
+$5
+$actions
+<hr><table valign=top>
+"
+
+omn=-100
+owho=""
+iseven=true
+
+echo "<tr><th>Who<th>What<th>When"
+eol=""
+
+sed -e '{
+s/&/\&amp;/g
+s/</\&lt;/g
+s/>/\&gt;/g
+s/http:\/\/[-a-zA-Z0-9$_@.&+!*"'"'"'(),%\/;=?~:#]*/<a href="&">&<\/a>/g
+s/ftp:\/\/[-a-zA-Z0-9$_@.&+!*"'"'"'(),%\/;=?~:#]*/<a href="&">&<\/a>/g
+}' | ( read; curline=1  # 1st line is join of the bot
+ while read time who text;do
+  let curline=curline+1
+  h=${time:1:2}
+  m=${time:4:2}
+  let mn="(${h#0}*60)+${m#0}"
+  if [ "$who" = "*" ]; then who="${text%% *}"; text="<i>$text</i>"; fi
+  if [ "$who" = "&lt;WebGate&gt;" -o "$who" = "&lt;Webgate&gt;" ]; then 
+    who="${text%%]*}"; who="${who#[}"
+    text="${text#*] }"
+  fi
+  who="${who%&gt;}";who="${who#&lt;}"
+  if let 'mn<(omn+5)'; then wakeup=false; else wakeup=true; fi
+  if let 'mn>=(omn+15)'; then 
+    if [ "$omn" = -100 ]; then seprow=
+    else  
+      let "dur=mn-omn";dots=
+      unset idle;let idle='dur%60'
+      if let 'dur>=60';then let durm='dur/60'; idle="${durm}h$idle";fi
+      idle="${idle}mn"
+      while let 'dur>=0';do dots="$dots.";let dur=dur-5;done
+      seprow="<tr class=sep><td colspan=3><font size=-5>$dots (idle for $idle)</font>"
+    fi
+  else seprow=; fi
+  omn=$mn
+  let aboveline=curline-4
+  timelink="<a href='?date=$2&sel=$curline#l$aboveline' class=timelink>$time</a>"
+  timelinkminor="<a href='?date=$2&sel=$curline#l$aboveline' class=timelinkminor>$time</a>"
+  if [ "$who" = "$owho" ]; then 
+    if $wakeup; then
+      echo "$eol"
+      if [ "$curline" = "$3" ]; then trclass=selected; else trclass=$rowcol;fi
+      echo "$seprow<tr class=$trclass><td><td><a name=l$curline></a>$text"
+      eol="<td valign=top align=right><small>$timelink</small>"
+    else
+      if [ "$curline" = "$3" ]; then 
+	echo "<table><tr class=selected><td><a name=l$curline></a>$text</table>"
+      else
+	echo "<br><a name=l$curline></a>$text"
+      fi
+    fi
+  else
+    if $iseven; then rowcol="even"; iseven=false
+    else rowcol="odd"; iseven=true
+    fi
+    owho="$who"
+    echo "$eol"
+    if [ "$who" = "***" ]; then class=IRC;rowcol=irc; else class="$who";fi
+    if [ "$curline" = "$3" ]; then trclass=selected; else trclass=$rowcol;fi
+    echo "$seprow<tr class=$trclass><td valign=top class=$class>$who<td class=text><a name=l$curline></a>$text"
+    if $wakeup; then
+      eol="<td valign=top align=right class=time><small>$timelink</small>"
+    else
+      eol="<td valign=top align=right class=time><small>$timelinkminor</small>"
+    fi
+  fi
+done;echo "$eol")
+
+
+echo "</table>
+<hr>$actions
+</body></html>"
+exit 0
+### EMACS MODES
+### Local Variables: ***
+### mode:ksh ***
+### End: ***
