@@ -1,4 +1,7 @@
-1.8c 08 Nov 2003
+1.8d 09 Nov 2003
+    selected (highlighted) lines in thw html web rendering can now be a range
+	of values separated by - or :    
+1.8c 09 Nov 2003
     log files can now be compressed again.
     you should create a writable by all directory LOG/.exp: do
         for i in `locate irclogger.log`;do mkdir "${i%irclogger.log}.exp"

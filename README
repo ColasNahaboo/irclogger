@@ -24,7 +24,7 @@ follow the instructions.
 You need to have agrep installed on your system (http://www.tgries.de/agrep/)
 It should work with any 2.x python.
 
-PS: to find quickly whene irclogger has been installed on a machine, do
+PS: to find quickly where irclogger has been installed on a machine, do
 a "locate" to find files irclogger.log (for LOG) and irclogger.conf (for BIN)
 
 Upgrade:
@@ -44,7 +44,7 @@ that only the doc or the cgi scripts have changed, so only step [1] should be
 performed. Version of irclogger is specified at the head of irclogger and will
 never be minor, version of the rest is in the HISTORY file.
 
-details:
+Details:
 ========
 
 irclogger.conf
