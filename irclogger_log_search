@@ -1,6 +1,6 @@
 #!/bin/bash
 set -a
-. bashlib
+. irclogger_cgiparse
 . irclogger_common
 CHAN=${PATH_INFO#/}
 

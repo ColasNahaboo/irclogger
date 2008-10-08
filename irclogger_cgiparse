@@ -1,0 +1,73 @@
+#!/bin/bash
+# Author: Colas Nahaboo http://colas.nahaboo.net
+# kbashlib is used by sourcing it at the beginning of scripts that
+# needs its functionality (by using the . or source commands).
+# it is inspired by bashlib, but:
+#  - without bugs on special chars in values (like newline)
+#  - much faster by using bash builtins instead of external commands
+
+# sets CGI values key=val into $FORM_key
+# $FORMS is the list of keys, blank-separated
+# `param key` return the value of key
+
+# Requires the following standard GNU utilities: none!
+
+# TODO:
+# add a way to handle huge data values when in stdin
+
+VERSION=2
+
+# Global debug flag. Set to 0 to disable debugging throughout the lib
+DEBUG=0
+
+# capture stdin for POST methods. POST requests don't always come in
+# with a newline attached, so we use cat to grab stdin and append a newline.
+# This is a wonderful hack, and thanks to paulb.
+STDIN=$(cat)
+if [ -n "${STDIN}" ]; then
+  QUERY_STRING="${STDIN}&${QUERY_STRING}"
+fi
+
+shopt -s extglob
+
+# the following line has been created by:
+# echo '(? "hexvals=(")(dotimes (i 256) (PF "\"%1%0\" " (String (list i)) (if (match "[`\"\\]" (String (list i))) "\\" "")))(? ")")'|klone q>/tmp/hex
+hexvals=(" " "" "" "" "" "" "" "" "" "	" "
+" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" " " "!" "\"" "#" "$" "%" "&" "'" "(" ")" "*" "+" "," "-" "." "/" "0" "1" "2" "3" "4" "5" "6" "7" "8" "9" ":" ";" "<" "=" ">" "?" "@" "A" "B" "C" "D" "E" "F" "G" "H" "I" "J" "K" "L" "M" "N" "O" "P" "Q" "R" "S" "T" "U" "V" "W" "X" "Y" "Z" "[" "\\" "]" "^" "_" "\`" "a" "b" "c" "d" "e" "f" "g" "h" "i" "j" "k" "l" "m" "n" "o" "p" "q" "r" "s" "t" "u" "v" "w" "x" "y" "z" "{" "|" "}" "~" "" "Ä" "Å" "Ç" "É" "Ñ" "Ö" "Ü" "á" "à" "â" "ä" "ã" "å" "ç" "é" "è" "ê" "ë" "í" "ì" "î" "ï" "ñ" "ó" "ò" "ô" "ö" "õ" "ú" "ù" "û" "ü" "†" "°" "¢" "£" "§" "•" "¶" "ß" "®" "©" "™" "´" "¨" "≠" "Æ" "Ø" "∞" "±" "≤" "≥" "¥" "µ" "∂" "∑" "∏" "π" "∫" "ª" "º" "Ω" "æ" "ø" "¿" "¡" "¬" "√" "ƒ" "≈" "∆" "«" "»" "…" " " "À" "Ã" "Õ" "Œ" "œ" "–" "—" "“" "”" "‘" "’" "÷" "◊" "ÿ" "Ÿ" "⁄" "€" "‹" "›" "ﬁ" "ﬂ" "‡" "·" "‚" "„" "‰" "Â" "Ê" "Á" "Ë" "È" "Í" "Î" "Ï" "Ì" "Ó" "Ô" "" "Ò" "Ú" "Û" "Ù" "ı" "ˆ" "˜" "¯" "˘" "˙" "˚" "¸" "˝" "˛" "ˇ")
+_x0=0;_x1=1;_x2=2;_x3=3;_x4=4;_x5=5;_x6=6;_x7=7;_x8=8;_x9=9
+_xa=10;_xb=11;_xc=12;_xd=13;_xe=14;_xf=15
+_xA=10;_xB=11;_xC=12;_xD=13;_xE=14;_xF=15
+
+s="${QUERY_STRING}"
+varn=0
+# Handle GET and POST requests... (the QUERY_STRING will be set)
+# name=value params, separated by either '&' or ';'
+while test -n "$s"; do
+  var="${s%%=*}"; var="${var//[^a-zA-Z_0-9]/}"
+  val="${s#*=}"
+  case "$s" in *[\&\;]*) s="${s#*[&;]}";; *)s=;; esac
+  val="${val%%[&;]*}"
+  v="${val//+/ }"
+  val=
+  while true; do
+    case "$v" in 
+      *[%]*) val="$val${v%%[%]*}"; v="${v#*%}"
+	     h="${hexvals[16*_x${v:0:1}+_x${v:1:1}]}"
+	     val="$val$h"
+	     v="${v:2}"
+	     ;;
+      *) val="$val$v";break;; 
+    esac
+  done
+
+  FORMS="$FORMS $var"
+  declare -x FORM_$var="$val"
+done
+
+# emulate bahlib param function
+param () { 
+  if [ $# -eq 0 ]; then echo "$FORMS"
+  elif [ $# -eq 1 ]; then echo "${FORM_$1}"
+  else declare -x FORM_$1="$*"
+  fi
+}

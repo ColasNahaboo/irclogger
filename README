@@ -105,7 +105,6 @@ then:
   cd $BIN
   for i in logs password log log_search 
   do ln -s irclogger_${i} irclogger_${i}_a; done
-  # Install bashlib
   # Edit first line of $DIR/.htaccess to reflect $PASS value
 
   . irclogger.conf; touch $PASS;chmod a+rw $PASS

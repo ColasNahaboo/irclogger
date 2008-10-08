@@ -3,7 +3,13 @@ changed, and should be restarted after upgrade. Minor versions (1.8a, 1.8e) do
 not modify the python engine so upgrades are done  by just unpacking the
 distribution in place.
 
-1.12  25 Jan 2004
+1.12a 15 Feb 2005
+   MANUAL STEPS for upgrade:
+     * from install dir; ln -s $PWD/irclogger_cgiparse $BIN
+     (hint: do locate irclogger_log_search to find $BIN dirs)
+   fix space not recognised in search on some systems
+
+1.12  25 Jan 2005
    [off] at start of lines can now be case-independent
 
 1.11  30 Sep 2004

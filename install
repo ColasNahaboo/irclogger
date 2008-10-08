@@ -72,14 +72,8 @@ agrep_check () {
 
 
 install_bashlib () {
-  if test ! -e "$BIN/bashlib"; then
-    rm -rf bashlib-0.4
-    tar xfz bashlib-0.4.tar.gz
-    cd bashlib-0.4
-    ./configure
-    cp bashlib "$BIN"
-    cd ..
-    rm -rf bashlib-0.4
+  if test ! -e "$BIN/irclogger_cgiparse"; then
+    cp irclogger_cgiparse "$BIN"
   fi
 }
 create_irclogger_conf () {
