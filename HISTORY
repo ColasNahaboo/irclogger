@@ -1,3 +1,17 @@
+1.7 23 Oct 2003
+    irclogger: forces all channel names to lowercase, ignores previously made
+        dirs that were not lowercase. You will have to rename them by hand
+	before re-running irclogger.
+	This was needed, otherwise if people created channels TWiki and then
+	Twiki, the logs were in different dirs although they were the same IRC
+	channels
+    added a small log converter from xchat format to mirc/irclogger one,
+        xchat-to-mirc
+1.6a 22 Oct 2003
+    html: new output format: TWiki (makes definition lists in TWiki)
+        done by new file (cgi bash)  irclogger_totwiki
+    Update instructions: make a symbolic link to this file from the BIN dirs:
+        in all BINs, do a: ln -s /usr/local/irclogger/irclogger_totwiki .
 1.6 21 Oct 2003
     Minor fixs: (python) online bot help gives the URL of the logs
     Niceties to the html page (user manual)

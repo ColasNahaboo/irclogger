@@ -7,6 +7,7 @@ GCF=4
 
 date=`param date`
 raw=`param raw`
+twiki=`param twiki`
 sel=`param sel`
 CHAN=${PATH_INFO#/}
 CHAN=${CHAN:-main}
@@ -65,6 +66,20 @@ if [ "$raw" = on ]; then
     case "$log" in
       *.gz ) zcat $log;;
       *) cat $log;;
+    esac
+  fi
+elif [ "$twiki" = on ]; then
+  if [ "$gzip" = on ]; then
+    echo "Content-Type: text/plain"; echo "Content-Encoding: gzip"; echo
+    case "$log" in 
+      *.gz ) zcat $log|irclogger_totwiki $CHAN $date "$sel" "$conffile" "$header" "$log"|gzip -$GCF;;
+      *) cat $log|irclogger_totwiki $CHAN $date "$sel" "$conffile" "$header" "$log"|gzip -$GCF;;
+    esac 
+  else
+    echo "Content-Type: text/plain"; echo
+    case "$log" in
+      *.gz ) zcat $log|irclogger_totwiki $CHAN $date "$sel" "$conffile" "$header" "$log";;
+      *) cat $log|irclogger_totwiki $CHAN $date "$sel" "$conffile" "$header" "$log";;
     esac
   fi
 else

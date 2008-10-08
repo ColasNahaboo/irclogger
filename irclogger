@@ -1,5 +1,5 @@
 #!/usr/bin/python
-VERSION = """IRC Logger python bot v1.6, http://koala.ilog.fr/irclogger"""
+VERSION = """IRC Logger python bot v1.7, http://koala.ilog.fr/irclogger"""
 # irclogger server nickname logsdir url [start_channels...]
 #           if args are "." they are replaced by default values
 
@@ -66,6 +66,7 @@ from ircAsync import debug
 import signal
 import re, os, os.path, sys, base64, socket, urllib, time, asyncore, string
 from re import match
+from string import lower
 
 from ircAsync import PRIVMSG, NOTICE, PING, PONG, USER
 from ircAsync import NICK, JOIN, PART, INVITE, QUIT
@@ -87,9 +88,10 @@ onRe = re.compile(" *(log|go|on|start) +((#?[^ ]+)( *([^ ]+))?)", re.I)
 
 #-----------------------------------------------------------------------------
 
-def log(channel, text): 
+def log(channelname, text): 
    fn = time.strftime(_logfilename, time.gmtime(time.time()))
    # channels are #-prefixed, but we store in dirs without the prefix
+   channel = lower(channelname)
    if channel not in directories: 
       # if it fails, the exception may as well be raised
       os.mkdir(os.path.join(_logsdir, channel[1:]))
@@ -280,12 +282,14 @@ def main(hostName, port, chan):
       c.todo([JOIN, text])
    c.bind(logInvite, 'INVITE', r"(.*)")
 
-
    # inits
    if not os.access(_logsdir, os.W_OK): os.makedirs(_logsdir)
    for entry in os.listdir(_logsdir):
       if os.path.isdir(os.path.join(_logsdir, entry)):
-         directories.append('#' + entry)
+         lentry = lower(entry)
+         if lentry == entry:  # ignore non-lowercase dirs
+            if lentry not in directories:
+               directories.append('#' + lentry)
 
    # mainloop
    c.makeConn(hostName, port)
@@ -317,3 +321,4 @@ if __name__=='__main__':
       commandRe = re.compile(NickNameQ + '[,:] *(.*)', re.I)
       main(server, int(port), chans)
    else: print sys.argv; print _doc
+

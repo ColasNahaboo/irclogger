@@ -1,5 +1,5 @@
-On quit (deconnection), save the list of currently logged chan to be
-relogged on restart
+On quit (deconnection), save the list of currently logged chans to be
+relogged on restart?
 
 interface with cgiirc:
    * list logged chans in select box on start
@@ -26,6 +26,7 @@ or by wiki-like edition:
      for all .oldlines files and perform the merge:
      .new + (.log - N), then remove .new & .oldlines and .lock
      (inside a while loop looking for EDITS_PENDING existence)
+   * provide a way to make logs non editable (file NOEDIT in logs)
 
 allow search in multiple channels (shell-wilcardable list of dirs)
 allow grep via fgrep / egrep / agrep

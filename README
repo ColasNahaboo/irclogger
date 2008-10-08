@@ -135,6 +135,10 @@ irclogger_tohtml [bash]
     If a style.css file is defined, it replaces the one built-in in 
     irclogger_tohtml in var DEFSTYLE
 
+irclogger_totwiki [bash]
+    irclogger_totwiki channel date selected < log
+    Pretty-prints in a text form incluable in TWiki (see http://twiki.org)
+
 irclogger_logs [bash, cgi]
     irclogger_logs/channel
     lists all available days in channel

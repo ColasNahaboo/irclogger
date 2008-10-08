@@ -112,7 +112,9 @@ fi
 lines="$(wc -l $log|sed -e 's/ *\([^ ]*\).*/\1/')"
 echo "<li>$ss$ymd, <tt>$day</tt> <small>($lines lines)</small>"
 echo " : <a href=${SCRIPT_NAME%/*}/irclogger_log/$CHAN?date=$date>html</a> /"
-echo " <a href=${SCRIPT_NAME%/*}/irclogger_log/$CHAN?date=$date&raw=on>raw text</a>$es"
+echo " <a href=${SCRIPT_NAME%/*}/irclogger_log/$CHAN?date=$date&raw=on>raw text</a> /"
+echo " <a href=${SCRIPT_NAME%/*}/irclogger_log/$CHAN?date=$date&twiki=on>twiki</a>"
+echo "$es"
 if test "$ymd" = "$todaydate"; then echo " <b>(today)</b>";fi
 done | page
 

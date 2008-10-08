@@ -8,7 +8,7 @@ logs=/www/twikiirc/logs
 
 kill_bot () {
   ps awx|grep irclogger|grep python|fgrep $server| \
-fgrep $logs| ( read p r; kill $p )
+fgrep $logs| (while read p r;do  kill $p;done )
   date >>$logs/irclogger-restarts.log
 }
 

@@ -1,0 +1,50 @@
+#!/bin/bash
+# $1=channel $2=date('%Y-%m-%d,%a') $3=selected_line $4=config_file $5=header
+# $6=filename
+set -a
+shopt -s extglob
+
+CHAN=$1
+if test -e "$4"; then conffile="$4"; . "${conffile%/*}/irclogger_common"
+else logsdir=${logsdir:-/var/log/irclogger}
+fi
+
+case "$6" in /*)logfile="$6";; *)logfile="$PWD/$6";;
+esac
+cd $logsdir
+
+omn=-100
+owho=""
+iseven=true
+
+eol=""
+
+sed -e '{
+s/&/\&amp;/g
+s/</\&lt;/g
+s/>/\&gt;/g
+}' | ( read; curline=1  # 1st line is join of the bot
+ while read time who text;do
+  let curline=curline+1
+  if [ "$who" = "*" ]; then who="-"; fi
+  if [ "$who" = "&lt;WebGate&gt;" -o "$who" = "Webgate" ]; then 
+    who="${text%%]*}"; who="${who#[}"; text="${text#*] }"
+  fi
+  who="${who%&gt;}";who="${who#&lt;}"
+  case "$text" in
+    +([a-zA-Z_0-9]):\ *) text="<u>${text/:/</u>:}";;
+  esac
+  if [ "$who" = "$owho" ]; then 
+    echo "   <br> $text"
+  else
+    owho="$who"
+    echo "   $who: $text"
+  fi
+done)
+
+
+exit 0
+### EMACS MODES
+### Local Variables: ***
+### mode:ksh ***
+### End: ***

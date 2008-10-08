@@ -1,0 +1,16 @@
+#!/bin/bash
+# this script converts IRC logs from the xchat format to the mirc one used 
+# by irclogger
+# use it as a filter
+
+main () {
+  grep '^[A-Z][a-z][a-z] [0-9]' | while read m d h who text; do
+    time="${h%:*}"
+    if test x"$who" = 'x<--' -o x"$who" = 'x-->'; then
+      who='***'
+    fi
+    echo "[$time] $who $text"
+  done
+}
+
+main
