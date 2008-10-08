@@ -1,5 +1,5 @@
 #!/usr/bin/python
-VERSION = """IRC Logger python bot v1.11, http://koala.ilog.fr/irclogger"""
+VERSION = """IRC Logger python bot v1.14, http://koala.ilog.fr/irclogger"""
 # irclogger server nickname logsdir url [start_channels...]
 #           if args are "." they are replaced by default values
 
@@ -54,6 +54,7 @@ _nick = "*** %s is now known as %s"
 _session = "*** %s %s logging %s at %s"
 _logfilename = "%Y-%m-%d,%a.log"
 _logchannels = "CHANNELS.last"
+_channelsallow = "CHANNELS.allow"
 
 _pingDelay = 60
 _loopDelay = 30.0
@@ -110,6 +111,15 @@ def logChannels():
    else:
      channelslist = ''
    open(os.path.join(_logsdir, _logchannels), 'w').write(channelslist)
+
+def allowedChannel(channel):
+   try:
+      allowed = open(_channelsallow, 'r')
+      if channel not in allowed.read().split(' '):
+         return 0
+      else: return 1
+   except IOError: pass
+   return 0
 
 def globalsubstitute(input_string,from_string,to_string):
    splitlist = string.splitfields(input_string,from_string)
@@ -226,8 +236,9 @@ def main(hostName, port, chan):
 
       if nick == NickName: 
          if channel not in channels:
-            channels.append(channel)
-            logChannels()
+            if allowedChannel(channel):
+               channels.append(channel)
+               logChannels()
          t = time.strftime('%a %b %d %H:%M:%S %Y', time.gmtime(time.time()))
          log(channel, _session % (NickName, 'starts', channel, t))
          logOnMsg(channel, c)
@@ -280,21 +291,16 @@ def main(hostName, port, chan):
    c.bind(logQuit, 'QUIT', r"(.*)")
 
    def logKick(m, origin, args, text, c=c): 
-      print >> sys.stderr, "#LogKick args=", args
       channel = args[1]
       nick = origin
       if '!' in origin: nick = origin.split('!')[0]
       kickee = args[2]
       kick = _kick % (kickee, nick, text)
       log(channel, kick)
-      print >> sys.stderr, "#LogKick kickee=", kickee, "NickName=", NickName
       if kickee == NickName: 
          if channel in channels:
-            print >> sys.stderr, "#LogKick removing channel=", channel, "from ", channels
             channels.remove(channel)
-            print >> sys.stderr, "#LogKick log channels ", channels
             logChannels()
-      print >> sys.stderr, "#LogKick channels logged dumped"
       try: people[kickee].remove(channel)
       except: 
          print >> sys.stderr, "Something messed up, but it doesn't matter, for ", kickee, " kicked from ", channel

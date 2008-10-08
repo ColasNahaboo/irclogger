@@ -27,7 +27,7 @@ S=`pwd`
 main () {
   if test ! -e htaccess.sample; then abort "Please run me from irlogger directory";fi
   create_dirs "$BIN" "$LOG"
-  mkdir "$LOG/.exp";chmod a+rwx "$LOG/.exp"
+  mkdir -p "$LOG/.exp";chmod a+rwx "$LOG/.exp"
   create_files "$PASS"
   if test ! -e "$BIN/.htaccess"; then 
     sed -e 's/AuthUserFile .*/AuthUserFile '"$PASS/" <htaccess.sample >"$BIN/.htaccess"

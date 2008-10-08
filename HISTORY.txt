@@ -3,6 +3,11 @@ changed, and should be restarted after upgrade. Minor versions (1.8a, 1.8e) do
 not modify the python engine so upgrades are done  by just unpacking the
 distribution in place.
 
+1.14a 09 Oct 2008
+   search: do not use anymore the -a option of agrep, not available on recent 
+       versions
+   new web home is now: http://colas.nahaboo.net/Software/IrcLogger
+
 1.14 19 Sep 2005
    Bugfix for python 2.3:
       * Crashed when somebody said in a channel: [LOGGER], off
