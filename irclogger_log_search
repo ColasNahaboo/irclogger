@@ -79,6 +79,7 @@ main () {
     if [ -n "$FORM_verbatim" ]; then
       search="${search//,/\\,}";search="${search//;/\\;}"
     fi
+    expanse_compressed *.log.gz
     RESULTS=`search "$search"`
   else
     RESULTS=
@@ -108,6 +109,23 @@ search () {
     done
     echo "<hr><b>$matches</b> matches in $files files"
     )
+}
+
+# if there exists compressed files, create a dir with uncompressed files and 
+# go there
+expanse_compressed () {
+  if [ "$1" != "*.log.gz" ]; then
+    local ED=$logsdir/.exp/$CHAN
+    if [ ! -d $ED ]; then
+      local i
+      mkdir $ED
+      ln *.log $ED
+      for i in *.log.gz; do gzip -d <$i >$ED/"${i%.gz}"
+      done
+      trap 1 ''; (sleep 3600; rm -rf $ED) &
+    fi
+    cd $ED
+  fi
 }
 
 main

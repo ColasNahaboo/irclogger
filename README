@@ -75,6 +75,11 @@ Logs can be passord-protected by users from the web interface, except
 
 passfile (aka PASS) must be web-server writable htpasswd file, and must exist
 
+Logs can be compressed/decompressed at anytime via gzip. listing and searching
+will work transparently with compressed files. If any file is compressed, the
+search program will create a expansed mirror of all the logs in LOG/.exp that
+should be created writable by the web server UID on installation
+
 to run:
 ======
 

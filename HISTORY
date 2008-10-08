@@ -1,3 +1,8 @@
+1.8c 08 Nov 2003
+    log files can now be compressed again.
+    you should create a writable by all directory LOG/.exp: do
+        for i in `locate irclogger.log`;do mkdir "${i%irclogger.log}.exp"
+          chmod a+rw "${i%irclogger.log}.exp";done
 1.8b 08 Nov 2003
     search is now done by agrep. As a consequence, logs cannot be gzipped
 	anymore if you want to be able to search them (but gzipped files
