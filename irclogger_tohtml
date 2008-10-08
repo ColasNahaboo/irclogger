@@ -12,7 +12,7 @@ case "$6" in /*)logfile="$6";; *)logfile="$PWD/$6";;
 esac
 case "$3" in
   *-*) selstart="${3%%-*}";selend="${3##*-}";;
-  *:*) selstart="${3%%:*}";selend="${3##*:}";;
+  '') selstart="-1";selend="-1";;
   *) let selstart="$3"; let selend="$3";;
 esac
 
@@ -94,16 +94,16 @@ s/ftp:\/\/[-a-zA-Z0-9$_@.&+!*"'"'"'(),%\/;=?~:#]*/<a href="&">&<\/a>/g
   if [ "$who" = "$owho" ]; then 
     if $wakeup; then
       echo "$eol"
-      if let 'curline>=selstart && curline<=selend'; then trclass=selected 
+      if let 'selstart>=0 && curline>=selstart && curline<=selend'
+      then trclass=selected 
       else trclass=$rowcol
       fi
       echo "$seprow<tr class=$trclass><td><td><a name=l$curline></a>$text"
       eol="<td valign=top align=right><small>$timelink</small>"
     else
-      if let 'curline>=selstart && curline<=selend'; then
-	echo "<table><tr class=selected><td><a name=l$curline></a>$text</table>"
-      else
-	echo "<br><a name=l$curline></a>$text"
+      if let 'selstart>=0 && curline>=selstart && curline<=selend'
+      then echo "<table><tr class=selected><td><a name=l$curline></a>$text</table>"
+      else echo "<br><a name=l$curline></a>$text"
       fi
     fi
   else
@@ -113,7 +113,8 @@ s/ftp:\/\/[-a-zA-Z0-9$_@.&+!*"'"'"'(),%\/;=?~:#]*/<a href="&">&<\/a>/g
     owho="$who"
     echo "$eol"
     if [ "$who" = "***" ]; then class=IRC;rowcol=irc; else class="$who";fi
-    if let 'curline>=selstart && curline<=selend'; then trclass=selected
+    if let 'selstart>=0 && curline>=selstart && curline<=selend'
+    then trclass=selected
     else trclass=$rowcol
     fi
     echo "$seprow<tr class=$trclass><td valign=top class=$class>$who<td class=text><a name=l$curline></a>$text"

@@ -35,12 +35,8 @@ else
   fi
 fi
 
-if [ -z "$date" ]; then date="`date -u +'%Y-%m-%d,%a'`"
-fi
-log=$date.log
-if [ ! -e $log ]; then 
-  log=$date.log.gz
-  if [ ! -e $log ]; then cat << EOF	
+error_file_not_found () {
+cat << EOF	
 Content-type: text/html
 
 <!DOCTYPE HTML PUBLIC \"-//IETF//DTD HTML//EN\">
@@ -51,6 +47,15 @@ Content-type: text/html
 </body></html>
 EOF
 exit 0
+}
+
+if [ -z "$date" ]; then date="`date -u +'%Y-%m-%d,%a'`"
+fi
+case "$date" in *,*):;;*)date="`date -d $date +'%Y-%m-%d,%a'`";;esac
+log=$date.log
+if [ ! -e $log ]; then 
+  log=$date.log.gz
+  if [ ! -e $log ]; then error_ file_not_found
   fi
 fi
 

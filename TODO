@@ -29,4 +29,5 @@ or by wiki-like edition:
 allow search in multiple channels (shell-wilcardable list of dirs). 
     take care of passwd-protected ones
 
-allow grep via fgrep / egrep / agrep
+allow selecting start and end of select range in html form
+another parameter to restrict view to only selected range (without highlight)

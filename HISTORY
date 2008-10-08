@@ -1,6 +1,17 @@
+Notes: major versions (1.5, 1.8) indicates that the python IRC bot have been
+changed, and should be restarted after upgrade. Minor versions (1.8a, 1.8e) do
+not modify the python engine so upgrades are done  by just unpacking the
+distribution in place.
+
+1.8e 15 Nov 2003
+    dates in URLs can now omit the day of week part:
+        ...irclogger_log/twiki?date=2003-11-14 is sufficient, no need
+	to have ...?date=2003-11-14,Fri
+    line ranges can be separated by - only, no more :
 1.8d 09 Nov 2003
-    selected (highlighted) lines in thw html web rendering can now be a range
-	of values separated by - or :    
+    selected (highlighted) lines in the html web rendering can now be a range
+	of values separated by a dash: -     
+	e.g: ?date=2003-11-14,Fri&sel=42-63
 1.8c 09 Nov 2003
     log files can now be compressed again.
     you should create a writable by all directory LOG/.exp: do

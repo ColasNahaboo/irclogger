@@ -6,7 +6,7 @@ You will need to define 3 places:
    BIN (dir) where to put the CGI web executables and config file
    LOG (dir) where the logs will be stored (ideally out of the web space)
 	     and optional html+css style files
-   PASS (file) where is the appache passwords file for the channels
+   PASS (file) where is the apache passwords file for the channels
 and the URL where BIN will be visible from the web
 and optionally the CHANNEL to log on startup.
 
