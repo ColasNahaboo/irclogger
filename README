@@ -25,15 +25,18 @@ Upgrade:
 ========
 Due to the installation using symbolic links, upgrade is a breeze:
   [1] uncompress the distribution where you installed it (default: /usr/local)
-  [2] if the HISTORY sais that "irclogger" changed, kill its running 
+  [2] check the HISTORY for other manual upgrade steps, if any
+  [3] if the HISTORY says that "irclogger" changed, kill its running 
       instances, you can find them by: 
 	   ps awx|grep 'python.*[i]rclogger'
       If you run it via an irclogger-run based script, they will be restarted
       automatically in 45s
+
 Note: major versions (1.4, 1.5...) means that the irclogger python bot has
 changed and that you should restart it. Minor versions (1.5a, 1.5b...) means
-that only the doc or the cgi scripts have chnaged, so only step [1] should be
-performed. 
+that only the doc or the cgi scripts have changed, so only step [1] should be
+performed. Version of irclogger is specified at the head of irclogger and will
+never be minor, version of the rest is in the HISTORY file.
 
 details:
 ========

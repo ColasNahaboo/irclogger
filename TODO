@@ -1,6 +1,3 @@
-On quit (deconnection), save the list of currently logged chans to be
-relogged on restart?
-
 interface with cgiirc:
    * list logged chans in select box on start
    * link to cgiirc to directly jump into a channel from web irclooger pages
@@ -20,6 +17,7 @@ or by wiki-like edition:
      back in browser, copy/paste, do a merge by hand
      save in another files .new then .oldlines (with N)
      make them a+rw
+     on save, join lines not beginning by [hh:mm] 
    * append chan name to a EDITS_PENDING file global for all chans
    * irclogger, on tick look for EDITS_PENDING. if exists, remove it
      then looks in all chanss listed in it 
@@ -28,5 +26,7 @@ or by wiki-like edition:
      (inside a while loop looking for EDITS_PENDING existence)
    * provide a way to make logs non editable (file NOEDIT in logs)
 
-allow search in multiple channels (shell-wilcardable list of dirs)
+allow search in multiple channels (shell-wilcardable list of dirs). 
+    take care of passwd-protected ones
+
 allow grep via fgrep / egrep / agrep

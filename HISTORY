@@ -1,10 +1,18 @@
+1.8 23 Oct 2003
+    irclogger: on exit (^C or kill or disconnection) save the list of 
+        monitored channels (space-separated list) in file LOG/CHANNELS.last, 
+	so that (the new) irclogger-run can reconnect to them on startup.
+	No need to restart irclogger if you do not need this feature.
+    you will need to update your existing installed irclogger-run scripts with
+        the provided patches/irclogger-run-1.8
 1.7 23 Oct 2003
     irclogger: forces all channel names to lowercase, ignores previously made
         dirs that were not lowercase. You will have to rename them by hand
 	before re-running irclogger.
 	This was needed, otherwise if people created channels TWiki and then
 	Twiki, the logs were in different dirs although they were the same IRC
-	channels
+	channels.
+	No need to restart irclogger if you do not need this feature.
     added a small log converter from xchat format to mirc/irclogger one,
         xchat-to-mirc
 1.6a 22 Oct 2003
