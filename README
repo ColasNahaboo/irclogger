@@ -21,6 +21,12 @@ go to this dir
 run: ./install BIN LOG PASS URL CHANNEL
 follow the instructions.
 
+You need to have agrep installed on your system (http://www.tgries.de/agrep/)
+It should work with any 2.x python.
+
+PS: to find quickly whene irclogger has been installed on a machine, do
+a "locate" to find files irclogger.log (for LOG) and irclogger.conf (for BIN)
+
 Upgrade:
 ========
 Due to the installation using symbolic links, upgrade is a breeze:
@@ -62,7 +68,6 @@ You should do in it:
 echo 'deny from all' >.htaccess
 
 Logs are in LOG/CHANNEL/YYYY-MM-DD,Day.log
-Logs can be gzipped at any date (except today's one, for appending)
 Logs can be passord-protected by users from the web interface, except
      if a file named "PUBLIC" exists in its dir. Users cannot remove
      the protection (A channel log is protected if a user of the name of the

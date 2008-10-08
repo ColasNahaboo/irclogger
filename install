@@ -45,6 +45,7 @@ main () {
   echo "refer to logs by:"
   echo "<a href='$LOGURL/irclogger_logs/XXX'>IRC log for channel #XXX</a>"
   apache_check
+  agrep_check
 }
 
 abort () {
@@ -61,6 +62,13 @@ apache_check () {
   </Location>"
   fi
 }
+
+agrep_check () {
+  if [ -z "`which agrep`" ];then
+    echo "*** WARNING: you need to install agrep!"
+  fi
+}
+
 
 install_bashlib () {
   if test ! -e "$BIN/bashlib"; then

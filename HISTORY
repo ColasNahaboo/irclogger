@@ -1,3 +1,10 @@
+1.8b 08 Nov 2003
+    search is now done by agrep. As a consequence, logs cannot be gzipped
+	anymore if you want to be able to search them (but gzipped files
+	are still web-visible and  listable). But agrep has an approximate
+	search very useful for IRC logs where typos abound
+    you should unzip all you existing logs: go to you LOG dir, and do:
+	gunzip */*.log.gz
 1.8a 06 Nov 2003
     cgi scripts: uses the $FORM_var system of bashlib rather than the
         `param var` form which seemed to have problems on some machines
