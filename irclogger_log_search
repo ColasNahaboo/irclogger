@@ -13,13 +13,13 @@ else chkerror[0]=checked
 fi
 if [ -n "$FORM_verbatim" ]; then optverb="-iO -0 -k";opterrors=
 chkverbatim=checked
-else optverb="-ia";chkverbatim=
+else optverb="-i";chkverbatim=
 fi
 if [ -n "$FORM_word" ]; then optword="-w";chkword=checked
 else optword=;chkword=
 fi
 if [ -n "$FORM_case" ]; then optcase='-iO';chkcase=checked
-  if [ "x$optverb" = x-ia ]; then optverb=
+  if [ "x$optverb" = x-i ]; then optverb=
   fi
 else chkcase=
 # no else: in default case, trust optverb

@@ -40,3 +40,10 @@ the channel
 
 Adding by hand a / to the end of the URL .../irclogger_logs breaks the list of
 channels, as the links to the channel get an extra irclogger_logs component
+
+RSS Feeds (idea by Marc Laporte)
+
+access control: 
+   * login with ldap
+   * protect by list of users
+   * with date ranges? (user foo allowed 2005-2007)
