@@ -3,10 +3,15 @@
   <head>
     <title>irclogger</title>
     <link rel=stylesheet href='style.css'>
+    <style type='text/css'>
+      tt {background-color:#eeeeee}
+    </style>
   </head>
 
   <body bgcolor='#e2fff7'>
     <h1>irclogger</h1>
+<table border=0 cellpadding="10%"><hr valign=top>
+<td valign=top width='50%'>
 <h2>What is irclogger</h2>
 irclogger is a simple "bot", a program connecting as a client on IRC servers
     to provide a web log of what is said. It aims to provide a simple and
@@ -45,7 +50,8 @@ Pure Open source: <a href='http://www.gnu.org/copyleft/gpl.html'>GPL</a>
 
 <h2>More details</h2>
 See the <a href=README>README</a> text file, and the 
-<a href=HISTORY>HISTORY</a> of versions.
+<a href=HISTORY>HISTORY</a> of versions. You can be
+<a href='http://changedetection.com/detect.html?url=http://koala.ilog.fr/irclogger/HISTORY'>mailed of new versions</a>
 <p>
 See its web output on the <a href='http://koala.ilog.fr/twikiirc/'>logs of the #twiki IRC channel</a>
 
@@ -53,6 +59,56 @@ See its web output on the <a href='http://koala.ilog.fr/twikiirc/'>logs of the #
 Download the last version at 
 <a href='http://koala.ilog.fr/irclogger/files'>http://koala.ilog.fr/irclogger/files</a>.
 
+<td valign=top bgcolor='#fffae5'>
+<h2>User manual</h2> 
+
+<b>irclogger</b> appears just as another user chatting on the IRC server and
+channels, with the name <tt>[LOGGER]</tt>. You use it by talking to it, just
+like another user, with the <tt>/msg</tt> command on most clients, or open
+a private discussion from the menus.
+
+<ul>
+<li><b>To start logging a channel</b> "#foo", either:
+<ul><li><b>invite</b> the bot to the channel. In channel #foo, type:
+<br><tt>/invite&nbsp;[LOGGER]</tt>
+<br>Depending on the server configuration, you may
+not have the rights to do this, so just use the second solution:
+<li><b>tell it to log</b> the channel, by sending it a private messages
+"log&nbsp;channel", i.e. 
+<br><tt>/msg&nbsp;[LOGGER]&nbsp;log&nbsp;#foo</tt>
+<br>If the channel is password protected by a key, say "bar", you must append it,
+e.g: <br><tt>/msg&nbsp;[LOGGER]&nbsp;log&nbsp;#foo&nbsp;bar</tt>
+<br>
+</ul>
+<li><b>To stop logging a channel</b>, you can use any operation to remove a
+user, or just say in the channel:
+<tt>[LOGGER]&nbsp;off</tt>
+
+<li><b>To type a non-logged line</b>, just prefix it by <b>[off]</b>, as in:
+<tt>[off]&nbsp;well,&nbsp;it&nbsp;sucks&nbsp;:-)</tt>
+
+<li><b>To get online help</b>, just say anything directly to the bot in a
+private message
+</ul>
+
+
+<h2>Privacy</h2>
+The bot only logs when you can see it in the user list as user
+"<b>[LOGGER]</b>". If you do not see it, it cannot log you. The bot do not log
+newly created channels, it has to be explicitely invited to log them. 
+The bot writes a very visible message in the channel when starting and
+stopping logging a channel.
+<p>
+Editing logs is easy for an admin as they are only plain text files on the
+server. A future version will allow editing of the logs by users from the web.
+<p>
+Users can decide to password-protect the web logs. Once protected the cannot
+be made unprotected again. Some channels can be declared public by the
+administrator, which forbids users to password-protect them.
+
+
+
+</table>
     <hr>
     <address><a href="http://colas.nahaboo.net">Colas Nahaboo</a></address>
   </body>

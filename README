@@ -1,6 +1,6 @@
 Irclogger installation
 ======================
-IRC Logger python bot v1.5, http://koala.ilog.fr/irclogger
+IRC Logger python bot, http://koala.ilog.fr/irclogger
 
 You will need to define 3 places:
    BIN (dir) where to put the CGI web executables and config file
@@ -30,6 +30,10 @@ Due to the installation using symbolic links, upgrade is a breeze:
 	   ps awx|grep 'python.*[i]rclogger'
       If you run it via an irclogger-run based script, they will be restarted
       automatically in 45s
+Note: major versions (1.4, 1.5...) means that the irclogger python bot has
+changed and that you should restart it. Minor versions (1.5a, 1.5b...) means
+that only the doc or the cgi scripts have chnaged, so only step [1] should be
+performed. 
 
 details:
 ========

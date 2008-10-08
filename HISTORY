@@ -1,3 +1,8 @@
+1.6 21 Oct 2003
+    Minor fixs: (python) online bot help gives the URL of the logs
+    Niceties to the html page (user manual)
+    Decided to go to a major/minor version numbering (no changes to python
+        on minor versions)
 1.5 20 Oct 2003
     published on the web at http://koala.ilog.fr/irclogger
     entry "irclogger" in freshmeat.net.

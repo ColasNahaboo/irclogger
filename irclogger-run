@@ -1,0 +1,14 @@
+#!/bin/bash
+
+host=localhost
+confdir=/var/log/irclogger
+url=http://irc.ilog.fr/
+channels=
+
+while true; do
+    echo "Starting at `date`" >>"$confdir/irclogger.log"
+    /usr/local/irclogger/irclogger $host '[LOGGER]' \
+	"$confdir" "$url" $channels>>"$confdir/irclogger.log" 2>&1 </dev/null
+    echo "Stopping at `date`" >>"$confdir/irclogger.log"
+    sleep 45
+done

@@ -25,7 +25,7 @@ CHANNEL="$5"
 S=`pwd`
 
 main () {
-  if ! -e htaccess.sample; then abort "Please run me from irlogger directory";fi
+  if test ! -e htaccess.sample; then abort "Please run me from irlogger directory";fi
   create_dirs "$BIN" "$LOG"
   create_files "$PASS"
   if test ! -e "$BIN/.htaccess"; then 
@@ -37,7 +37,7 @@ main () {
   echo 'deny from all' >"$LOG"/.htaccess
   cd "$BIN"
   for i in logs password log log_search 
-  do ln -s irclogger_${i} irclogger_${i}_a; done
+  do ln -sf irclogger_${i} irclogger_${i}_a; done
   create_run
   echo '============================================================'
   echo "Now:"
@@ -48,7 +48,7 @@ main () {
 }
 
 abort () {
-  eccho "ERROR: $*"; exit 2
+  ccho "ERROR: $*"; exit 2
 }
 
 apache_check () {
@@ -83,8 +83,8 @@ EOF
 }
 
 create_run () {
-  sed -e 's|_LOGS|$LOG|' -e 's|_URL_|$URL|' -e 's|_CHAN_|$CHANNEL|' <irclogger-run.sample >irclogger-run
-  chmod a+x irclogger-run
+  sed -e "s|_LOGS_|$LOG|" -e "s|_URL_|$LOGURL|" -e "s|_CHAN_|$CHANNEL|" <$S/irclogger-run.sample >$S/irclogger-run
+  chmod a+x $S/irclogger-run
 }
 
 create_files () {

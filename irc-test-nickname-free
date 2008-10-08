@@ -1,5 +1,5 @@
 #!/usr/bin/python
-VERSION = """IRC Logger python bot v1.6, http://koala.ilog.fr/irclogger"""
+VERSION = """IRC Logger python bot v1.2, http://koala.ilog.fr/irclogger"""
 # irclogger server nickname logsdir url [start_channels...]
 #           if args are "." they are replaced by default values
 
@@ -12,14 +12,7 @@ _urlDef = "http://localhost"
 
 # help texts
 _doc = VERSION + """
-Author: Colas Nahaboo, 2003. License GPL 2.
-Bot adapted from code by Sean B. Palmer, deltab
-Uses ircAsync.py by Dan Connolly
-
-This simple bot aims to do only one thing: log in MIRC-format various channels
-on a server. Bot can be controlled by users.
-
-Usage: irclogger server[:port] nickname logsdir url [start_channels...]
+Usage: irc-test-nickname-free server[:port] nickname logsdir url nickname_to_test
 if args are "." they are replaced by default values
 """
 
@@ -33,10 +26,13 @@ _help = """<HELP>
    * [off] at the start of a line prevents the line to be logged
    * To stop logging a channel, type in it: LOGGER: OFF or LOGGER, OFF
      OFF can be also QUIT, STOP, EXIT (case insensitive)
-   * Logs are at: LOGSURL
 </HELP>"""
-_on = """| Starting logging this channel %s - See logs at %s - Lines beginning with "[off]" will not be logged - You can stop logging by typing LOGGER: off"""
-_off = """| Stopping logging this channel %s - See logs at %s - You can re-enable log by inviting me back, e.g: /INVITE LOGGER - or telling me in a private message: LOG #CHANNEL [KEY]"""
+_on = """| Starting logging this channel %s - See logs at %s
+| Lines beginning with "[off]" will not be logged
+| You can stop logging by typing LOGGER: off"""
+_off = """| Stopping logging this channel %s - See logs at %s
+| You can re-enable log by inviting me back, e.g: /INVITE LOGGER
+| or telling me in a private message: LOG #CHANNEL [KEY]"""
 _logAck = """Ok, joining channel %s to log it."""
 
 #-----------------------------------------------------------------------------
@@ -54,22 +50,19 @@ _nick = "*** %s is now known as %s"
 _session = "*** %s %s logging %s at %s"
 _logfilename ="%Y-%m-%d,%a.log"
 
-_pingDelay = 60
-_loopDelay = 30.0
+_pingDelay = 3
+_loopDelay = 2.0
 
 # End of main config stuff
 #============================================================================= 
 
 
 import ircAsync
-from ircAsync import debug
+from ircAsync import PRIVMSG, NOTICE, PING, PONG, USER, NICK, JOIN, PART, INVITE, QUIT, SPC, CR, LF, CRLF, RPL_WELCOME, debug
 import signal
 import re, os, os.path, sys, base64, socket, urllib, time, asyncore, string
 from re import match
 
-from ircAsync import PRIVMSG, NOTICE, PING, PONG, USER
-from ircAsync import NICK, JOIN, PART, INVITE, QUIT
-from ircAsync import SPC, CR, LF, CRLF, RPL_WELCOME
 
 def ctcp(s): return '\x01%s\x01' % s
 def me(s): return ctcp('ACTION %s' % s)
@@ -79,8 +72,7 @@ people = {}
 global channels
 channels = [] # channels that this bot's on
 
-global directories, commandRe, nicknameRe, offRe, onRe
-directories = []
+global commandRe, nicknameRe, offRe, onRe
 
 offRe = re.compile(" *(off|quit|stop|exit)", re.I)
 onRe = re.compile(" *(log|go|on|start) +((#?[^ ]+)( *([^ ]+))?)", re.I)
@@ -89,16 +81,11 @@ onRe = re.compile(" *(log|go|on|start) +((#?[^ ]+)( *([^ ]+))?)", re.I)
 
 def log(channel, text): 
    fn = time.strftime(_logfilename, time.gmtime(time.time()))
-   # channels are #-prefixed, but we store in dirs without the prefix
-   if channel not in directories: 
-      # if it fails, the exception may as well be raised
-      os.mkdir(os.path.join(_logsdir, channel[1:]))
-      directories.append(channel)
    if TimeStamp: 
       t = time.strftime('[%H:%M]', time.gmtime(time.time()))
       text = t + ' ' + text
    text += '\n'
-   open(os.path.join(_logsdir, channel[1:], fn), 'a').write(text)
+   write(text)
 
 def globalsubstitute(input_string,from_string,to_string):
    splitlist = string.splitfields(input_string,from_string)
@@ -115,7 +102,6 @@ def interpretMsg(m, origin, args, text, c):
       c.todo([JOIN, newchan])
    else:
       help = string.replace(_help, 'LOGGER', NickName)
-      help = string.replace(help, 'LOGSURL', _url)
       for line in help.split('\n'):
          c.todo([PRIVMSG, origin, ":", line])
          
@@ -140,7 +126,8 @@ def partChannel(channel, c):
 def tick(c):
    if time.time() > (c.lastTickTime + _pingDelay):
       c.lastTickTime = time.time()
-      c.todo([PING, NickName])
+      c.todo(['WHO', NickNameT])
+
 
 # we redefine here asyncore's loop to fire a timer on tick
 def loop (c):
@@ -150,9 +137,8 @@ def loop (c):
         tick(c)
 
 #-----------------------------------------------------------------------------
-def main(hostName, port, chan):
+def main(hostName, port):
    c = ircAsync.T()
-   c.startChannels(chan)
    c.nick = NickName
    c.userid = 'logger'
    c.lastTickTime = time.time()
@@ -162,6 +148,14 @@ def main(hostName, port, chan):
    def hi(m, origin, args, text, c=c): 
       c.tell(args[1], 'hi, %s' % origin.split('!')[0])
    c.bind(hi, PRIVMSG, r"(?i)^(Hi|Hey|welcome)(,)? %s(\!)?$" % NickName)
+
+   def logWho(m, origin, args, text, c=c):
+      sys.exit(1)
+   c.bind(logWho, '352', r"(.*)")
+
+   def logWhoEnd(m, origin, args, text, c=c):
+      sys.exit(0)
+   c.bind(logWhoEnd, '315', r"(.*)")
 
    def logText(m, origin, args, text, c=c): 
       channel = args[1]
@@ -282,10 +276,6 @@ def main(hostName, port, chan):
 
 
    # inits
-   if not os.access(_logsdir, os.W_OK): os.makedirs(_logsdir)
-   for entry in os.listdir(_logsdir):
-      if os.path.isdir(os.path.join(_logsdir, entry)):
-         directories.append('#' + entry)
 
    # mainloop
    c.makeConn(hostName, port)
@@ -300,14 +290,13 @@ def main(hostName, port, chan):
     
 if __name__=='__main__': 
    if len(sys.argv) > 4: 
-      server, NickName, _logsdir, _url, chans = sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5:]
+      server, NickName, _logsdir, _url, NickNameT = sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5]
 
       if server == '.': server = 'localhost'
       if NickName == '.': NickName = NickNameDef
       if _logsdir == '.': _logsdir = _logsdirDef
       if _url == '.': _url = _urlDef
       
-      chans = [('#%s' % c, c)[c.startswith('#')] for c in chans]
       if ':' in server: server, port = server.split(':')
       else: port = '6667'
 
@@ -315,5 +304,5 @@ if __name__=='__main__':
       NickNameQ = re.sub("([][*+])", '[\\1]', NickName)
       nicknameRe = re.compile(NickNameQ, re.I)
       commandRe = re.compile(NickNameQ + '[,:] *(.*)', re.I)
-      main(server, int(port), chans)
+      main(server, int(port))
    else: print sys.argv; print _doc
