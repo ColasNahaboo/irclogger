@@ -30,7 +30,7 @@ main () {
   mkdir "$LOG/.exp";chmod a+rwx "$LOG/.exp"
   create_files "$PASS"
   if test ! -e "$BIN/.htaccess"; then 
-    sed -e 's/AuthUserFile .*/AuthUserFile $PASS/' <htaccess.sample >"$BIN/.htaccess"
+    sed -e 's/AuthUserFile .*/AuthUserFile '"$PASS/" <htaccess.sample >"$BIN/.htaccess"
   fi
   install_bashlib
   ln -fs $S/irclogger_* $S/nph-irclogger_reset_auth "$BIN"

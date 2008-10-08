@@ -2,39 +2,55 @@
 <html>
   <head>
     <title>irclogger</title>
-    <link rel=stylesheet href='style.css'>
-    <style type='text/css'>
-tt {background-color:#eeeeee}
-html body, td, th, div, span, p, ol, ul, dl, dt, dd, li, blockquote, h1, h2, h3, h4, h5, h6, select, input {
-  font-family: verdana,arial,geneva,helvetica,sans-serif; 
-}
-
-html body table {font-size: 100%;}
-html body {font-size: 80%;}
-html body p {line-height: 1.2}
-html code, html kbd, html tt, html samp, html pre {font: 100% monospace}
-html big, html large {font-size: 115%}
-html small, html sub, html sup {font-size: 85%}
-html h1 {font: bold 175% sans-serif; margin-bottom: 0.5em;color: #334d55;}
-html h2 {font: bold 144% sans-serif; margin-bottom: 0.2em;color: #334d55;}
-html h3 {font: bold 120% sans-serif; margin-bottom: 0.1em;color: #334d55;}
-html h4 {font: bold 100% sans-serif; margin-bottom: 0em;color: #334d55;}
-html h5 {font: bold 90% sans-serif; margin-bottom: 0em;color: #334d55;}
-html h6 {font: bold 80% sans-serif; margin-bottom: 0em;color: #334d55;}
-
-html body {background-color:#e2fff7}
-    </style>
+    <link rel=stylesheet href='http://colas.nahaboo.net/colas.css'>
   </head>
 
   <body>
-    <h1>irclogger</h1>
-<table border=0 cellpadding="10%"><hr valign=top>
-<td valign=top width='50%'>
+    <h1><a href="http://colas.nahaboo.net">Colas.Nahaboo.net</a> / 
+        <a href="http://colas.nahaboo.net/software">software</a> / 
+        irclogger</h1>
+<hr>
+<table border=0 cellpadding="10%"><tr valign=top>
+<td valign=top width='14%' class=left>
+<h2>Links</h2>
+<a href=files>Download</a><br>
+<a href='README.txt'>Readme</a><br>
+<a href='HISTORY.txt'>History</a><br>
+<a href='TODO.txt'>Todo</a><br>
+
+<h2>Versions</h2>
+<div class=news>[1.12a] 2005-02-15</div>
+<div class=news>[1.12] 2005-01-25</div>
+<div class=news>[1.11] 2004-09-30</div>
+<div class=news>[1.10a] 2004-09-08</div>
+<div class=news>[1.10] 2004-08-02</div>
+<div class=news>[1.9b] 2004-03-19</div>
+<div class=news>[1.9a] 2004-01-06</div>
+<div class=news>[1.9] 2003-11-21</div>
+<div class=news>[1.8e] 2003-11-15</div>
+<div class=news>[1.8d] 2003-11-09</div>
+<div class=news>[1.8c] 2003-11-09</div>
+<div class=news>[1.8b] 2003-11-08</div>
+<div class=news>[1.8a] 2003-11-06</div>
+<div class=news>[1.8] 2003-10-23</div>
+<div class=news>[1.7] 2003-10-23</div>
+<div class=news>[1.6a] 2003-10-22</div>
+<div class=news>[1.6] 2003-10-21</div>
+<div class=news>[1.5] 2003-10-20</div>
+<div class=news>[1.4] 2003-10-09</div>
+<div class=news>[1.3] 2003-10-04</div>
+<div class=news>[1.2] 2003-09-13</div>
+<div class=news>[1.1] 2003-09-12</div>
+<div class=news>[1.0] 2003-09-11</div>
+
+<td valign=top width='43%' class=middle>
 <h2>What is irclogger</h2>
 irclogger is a simple "bot", a program connecting as a client on IRC servers
     to provide a web log of what is said. It aims to provide a simple and
     web-compliant service. This page is at 
-<a href='http://koala.ilog.fr/irclogger'>http://koala.ilog.fr/irclogger</a>
+<a
+   href='http://colas.nahaboo.net/software/irclogger'>http://colas.nahaboo.net/software/irclogger</a>
+
 <h3>Goals</h3>
 Irclogger was done to:
 <ul>
@@ -69,17 +85,21 @@ irclogger consists of 2 parts:
 Pure Open source: <a href='http://www.gnu.org/copyleft/gpl.html'>GPL</a>
 
 <h2>More details</h2>
-See the <a href=README>README</a> text file, and the 
-<a href=HISTORY>HISTORY</a> of versions. You can be
-<a href='http://changedetection.com/detect.html?url=http://koala.ilog.fr/irclogger/HISTORY'>mailed of new versions</a>
+See the <a href='README.txt'>README</a> text file, and the 
+<a href='HISTORY.txt'>HISTORY</a> of versions. You can be
+<a href='http://changedetection.com/detect.html?url=http://colas.nahaboo.net/software/irclogger'>mailed of new versions</a>
 <p>
 See its web output on the <a href='http://koala.ilog.fr/twikiirc/'>logs of the #twiki IRC channel</a>
 
 <h2>Download</h2>
-Download the last version at 
-<a href='http://koala.ilog.fr/irclogger/files'>http://koala.ilog.fr/irclogger/files</a>.
+Download the last version in the
+<a href='files'>files</a> directory.
 
-<td valign=top bgcolor='#fffae5'>
+<h2>Related Links</h2>
+<ul><li>François Beerten has started <a href='http://colabti.de/~feb/IrcLoggerHelp.html'>rewriting irclogger in pure python</a>.
+</ul>
+
+<td valign=top class=right width="43%">
 <h2>User manual</h2> 
 
 <b>irclogger</b> appears just as another user chatting on the IRC server and
@@ -129,7 +149,7 @@ The bot writes a very visible message in the channel when starting and
 stopping logging a channel.
 <p>
 Editing logs is easy for an admin as they are only plain text files on the
-server. A future version will allow editing of the logs by users from the web.
+server. A future version may allow editing of the logs by users from the web.
 <p>
 Users can decide to password-protect the web logs. Once protected the log 
 cannot be made unprotected again. Some channels can be declared public by the

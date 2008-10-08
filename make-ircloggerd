@@ -1,0 +1,2 @@
+sed -e 's/ircAsync/ircAsyncD/g' <irclogger >ircloggerd
+chmod a+x ircloggerd

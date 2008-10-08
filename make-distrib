@@ -1,0 +1,14 @@
+#!/bin/bash
+# private file for my use, to generate a new distribution in DISTDIR
+
+DISTDIR="${1:-/tmp/irclogger}"
+
+mkdir -p $DISTDIR/files
+cd ..
+tar cfz $DISTDIR/files/irclogger-`grep '^[0-9][.][0-9]' irclogger/HISTORY.txt |head -1|sed -e 's/ .*//'`.tgz \
+`cat irclogger/FILES |while read f;do echo "irclogger/$f";done`
+
+cd -
+cp HISTORY.txt README.txt TODO.txt irclogger.html $DISTDIR
+
+echo "Ok, distribution made in $DISTDIR"
