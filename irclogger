@@ -1,5 +1,5 @@
 #!/usr/bin/python
-VERSION = """IRC Logger python bot v1.10, http://koala.ilog.fr/irclogger"""
+VERSION = """IRC Logger python bot v1.11, http://koala.ilog.fr/irclogger"""
 # irclogger server nickname logsdir url [start_channels...]
 #           if args are "." they are replaced by default values
 
@@ -85,6 +85,7 @@ directories = []
 
 offRe = re.compile(" *(off|quit|stop|exit)", re.I)
 onRe = re.compile(" *(log|go|on|start) +((#?[^ ]+)( *([^ ]+))?)", re.I)
+offPrefix = re.compile("^[^ ]+ [[]off[]]", re.I) 
 
 #-----------------------------------------------------------------------------
 
@@ -102,6 +103,7 @@ def log(channelname, text):
    text += '\n'
    open(os.path.join(_logsdir, channel[1:], fn), 'a').write(text)
 
+# must be called after each change to var channels
 def logChannels():
    channelslist = reduce(spaceConcat, map(trimSharp, channels)).lower()
    open(os.path.join(_logsdir, _logchannels), 'w').write(channelslist)
@@ -159,7 +161,6 @@ def exit_handler(signal, frame):
     t = time.strftime('%a %b %d %H:%M:%S %Y', time.gmtime(time.time()))
     for channel in channels: 
        log(channel, _session % (NickName, 'stops', channel, t))
-    logChannels()
     sys.exit(0)
 
 def spaceConcat(string1, string2):
@@ -194,7 +195,7 @@ def main(hostName, port, chan):
          text = _text % (nick, text)
       else: text = _action % (nick, text[8:-1])
       try: 
-         if not text[text.index(' ')+1:].startswith('[off]'): 
+         if not re.match(offPrefix, text):
             log(channel, text)
       except ValueError: log(channel, text)
    c.bind(logText, PRIVMSG, r"(.*)")
@@ -221,7 +222,9 @@ def main(hostName, port, chan):
       if '!' in origin: nick = origin.split('!')[0]
 
       if nick == NickName: 
-         if channel not in channels: channels.append(channel)
+         if channel not in channels:
+            channels.append(channel)
+            logChannels()
          t = time.strftime('%a %b %d %H:%M:%S %Y', time.gmtime(time.time()))
          log(channel, _session % (NickName, 'starts', channel, t))
          logOnMsg(channel, c)
@@ -253,7 +256,9 @@ def main(hostName, port, chan):
       part = _part % (nick, text)
       log(channel, part)
       if nick == NickName: 
-         if channel in channels: channels.remove(channel)
+         if channel in channels:
+            channels.remove(channel)
+            logChannels()
       try: people[nick].remove(channel)
       except: 
          print >> sys.stderr, "Something messed up, but it doesn't matter"
@@ -276,7 +281,9 @@ def main(hostName, port, chan):
       kick = _kick % (kickee, nick, text)
       log(channel, kick)
       if nick == NickName: 
-         if channel in channels: channels.remove(channel)
+         if channel in channels:
+            channels.remove(channel)
+            logChannels()
       try: people[nick].remove(channel)
       except: 
          print >> sys.stderr, "Something messed up, but it doesn't matter"

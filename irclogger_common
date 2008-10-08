@@ -46,6 +46,20 @@ protectable () {
   fi
 }
 
+#------------------------------------------------------------------ style
+# can be redefined by files style.sh in logs dirs
+
+html_head () { :; }
+
+html_header () { :; }
+
+html_footer () { :; }
+
+# $1=prefix $2=suffix rest=crumbs
+html_breadcrumbs () {
+  :
+}
+
 ### EMACS MODES
 ### Local Variables: ***
 ### mode:ksh ***

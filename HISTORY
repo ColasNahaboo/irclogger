@@ -3,7 +3,17 @@ changed, and should be restarted after upgrade. Minor versions (1.8a, 1.8e) do
 not modify the python engine so upgrades are done  by just unpacking the
 distribution in place.
 
-1.10 02 Aug 2004
+1.12  25 Jan 2004
+   [off] at start of lines can now be case-independent
+
+1.11  30 Sep 2004
+    Logged channels status were not saved in case of hard machine crash
+
+1.10a 08 Sep 2004
+    new config variable "top" to set topmost back link
+    new direct link to search in lchannel in the list of all chans
+
+1.10  02 Aug 2004
     MANUAL STEPS for upgrade:
      * from install dir; ln -s $PWD/{irclogger_logs_cc,irclogger_totext} $BIN
     Minor change to the logger python bot: a debug message was still printed

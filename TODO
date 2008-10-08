@@ -34,3 +34,6 @@ search:
 
 like style.css, provide facilities to include header & footer
 
+<SamHasler> Colas_, have a &user=SamH parameter and then colour code the HTML
+log to highlight the part of the log when users with than pattern weren't in
+the channel

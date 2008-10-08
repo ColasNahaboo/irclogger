@@ -61,13 +61,17 @@ EOF
 
 #-----------------------------------------------------------------------------
 # list all channels if none given
+if test -n "$top"; then backlink="<a href='$top'>&uarr;back</a><p>"
+else backlink=
+fi
 if [ -z "$CHAN" ]; then 
   echo "Content-Type: text/html"; echo
   echo "<!DOCTYPE HTML PUBLIC \"-//IETF//DTD HTML//EN\">"
   echo "<html><head><title>Logs of IRC channels</title>
     <meta http-equiv='Content-Type' content='text/html; charset=ISO-8859-1'>
     <style type='text/css'> $STYLE </style>
-</head><body><h1>Logs of IRC Channels</h1> $MESS
+</head><body><h1>Logs of IRC Channels</h1> $backlink
+$MESS
 <p>$private_image indicates password-protected logs.
 <tt><ul>"
   protected_chans=" "
@@ -79,10 +83,10 @@ if [ -z "$CHAN" ]; then
       case "$protected_chans" in *" $chan "*)
 	if protectable "$chan";then auth=_a; lock="$private_image";fi;; 
       esac
-      echo "<li><a href='irclogger_logs$auth/$chan'>$chan</a> $lock (<a href='${SCRIPT_NAME%/*}/irclogger_log/$chan'>today log</a>)"
+      echo "<li><a href='irclogger_logs$auth/$chan'>$chan</a> $lock (<a href='${SCRIPT_NAME%/*}/irclogger_log/$chan'>today log</a>, <a href='${SCRIPT_NAME%/*}/irclogger_log_search/$chan'>search</a>)"
     fi
   done
-  echo "</ul></tt><hr><small><i><a href='http://koala.ilog.fr/irclogger'>irclogger</a></i></small></body></html>"
+  echo "</ul></tt><hr>$backlink<small><i><a href='http://koala.ilog.fr/irclogger'>irclogger</a></i></small></body></html>"
   exit 0
 fi
 
