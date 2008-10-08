@@ -5,10 +5,10 @@ set -a
 PATH="$PATH:/usr/local/bin:$PWD"
 GCF=4
 
-date=`param date`
-raw=`param raw`
-twiki=`param twiki`
-sel=`param sel`
+date="$FORM_date"
+raw="$FORM_raw"
+twiki="$FORM_twiki"
+sel="$FORM_sel"
 CHAN=${PATH_INFO#/}
 CHAN=${CHAN:-main}
 
@@ -35,7 +35,7 @@ else
   fi
 fi
 
-if [ -z "$date" ]; then date="`date +'%Y-%m-%d,%a'`"
+if [ -z "$date" ]; then date="`date -u +'%Y-%m-%d,%a'`"
 fi
 log=$date.log
 if [ ! -e $log ]; then 

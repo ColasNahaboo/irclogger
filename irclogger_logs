@@ -97,8 +97,8 @@ else
   locked=
 fi
 
-todaydate="`date +'%Y-%m-%d,%a'`"
-oldweek=`date +'%V'`
+todaydate="`date -u +'%Y-%m-%d,%a'`"
+oldweek=`date -u +'%V'`
 
 ls -1 *.log* | sort -r | while read log; do 
 date=${log%%.*};day="${date##*,}";ymd="${date%%,*}"

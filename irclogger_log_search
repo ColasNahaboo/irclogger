@@ -4,13 +4,13 @@ set -a
 . irclogger_common
 CHAN=${PATH_INFO#/}
 
-search=`param search`
-action=`param action`
-grep=`param grep`
+search="$FORM_search"
+action="$FORM_action"
+grep="$FORM_grep"
 grepck=;egrepck=;fgrepck=
 case "$grep" in on)grepck=checked;;e|'')egrepck=checked;;f)fgrepck=checked;;
 esac
-if [ -n "`param case`" ]; then case=''; else case=i
+if [ -n "$FORM_case" ]; then case=''; else case=i
 fi
 STYLE=
 cd $logsdir

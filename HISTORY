@@ -1,3 +1,6 @@
+1.8a 06 Nov 2003
+    cgi scripts: uses the $FORM_var system of bashlib rather than the
+        `param var` form which seemed to have problems on some machines
 1.8 23 Oct 2003
     irclogger: on exit (^C or kill or disconnection) save the list of 
         monitored channels (space-separated list) in file LOG/CHANNELS.last, 
