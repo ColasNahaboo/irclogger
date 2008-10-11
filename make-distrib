@@ -1,14 +1,25 @@
 #!/bin/bash
-# private file for my use, to generate a new distribution in DISTDIR
+USAGE='generates a version and uploads it on my web distribution dir
+that must be in $files_repository (ssh syntax)'
 
-DISTDIR="${1:-/tmp/irclogger}"
+if test -z "$files_repository"; then echo "$USAGE"; exit 1; fi
 
-mkdir -p $DISTDIR/files
-cd ..
-tar cfz $DISTDIR/files/irclogger-`grep '^[0-9][.][0-9]' irclogger/HISTORY.txt |head -1|sed -e 's/ .*//'`.tgz \
-`cat irclogger/FILES |while read f;do echo "irclogger/$f";done`
+name=irclogger
+dir=/tmp/$name.$$
+rev=`grep '^[0-9][.][0-9]' HISTORY.txt |head -1|sed -e 's/ .*//'`
+repo=$files_repository/$name
 
-cd -
-cp HISTORY.txt README.txt TODO.txt irclogger.html $DISTDIR
+mkdir -p $dir/$name
+cp -a * $dir/$name
+cd $dir
+tar cfz /tmp/$name-$rev.tgz $name
+cd /tmp
+echo "## Ok, distribution made: `ls -sh $name-$rev.tgz`"
+echo "## Uploading to $repo"
+if scp -C $name-$rev.tgz $repo/$name-$rev.tgz; then
+  echo "## Ok, at $files_repository_url/$name/$name-$rev.tgz"
+else
+  echo "***** UPLOADING ERROR !!! *****"
+fi
 
-echo "Ok, distribution made in $DISTDIR"
+rm -rf $dir /tmp/$name-$rev.tgz

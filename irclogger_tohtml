@@ -83,7 +83,7 @@ s/</\&lt;/g
 s/>/\&gt;/g
 s/http:\/\/[-a-zA-Z0-9$_@.&+!*"'"'"'(),%\/;=?~:#]*/<a href="&">&<\/a>/g
 s/ftp:\/\/[-a-zA-Z0-9$_@.&+!*"'"'"'(),%\/;=?~:#]*/<a href="&">&<\/a>/g
-}' | ( curline=1  
+}' | ( curline=0  
  while read time who text;do
   let curline=curline+1
   h=${time:1:2}
