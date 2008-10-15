@@ -9,6 +9,7 @@ date="$FORM_date"
 raw="$FORM_raw"
 twiki="$FORM_twiki"
 text="$FORM_text"
+urls="$FORM_urls"
 
 sel="$FORM_sel"
 CHAN=${PATH_INFO#/}
@@ -108,14 +109,18 @@ else
   if [ "$gzip" = on ]; then
     echo "Content-Type: text/html"; echo "Content-Encoding: gzip"; echo
     case "$log" in 
-      *.gz ) zcat $log|irclogger_tohtml $CHAN $date "$sel" "$conffile" "$header" "$log"|gzip -$GCF;;
-      *) cat $log|irclogger_tohtml $CHAN $date "$sel" "$conffile" "$header" "$log"|gzip -$GCF;;
+      *.gz ) zcat $log|irclogger_tohtml $CHAN $date \
+             "$sel" "$conffile" "$header" "$log" "$urls"|gzip -$GCF;;
+      *) cat $log|irclogger_tohtml $CHAN $date \
+         "$sel" "$conffile" "$header" "$log" "$urls"|gzip -$GCF;;
     esac 
   else
     echo "Content-Type: text/html"; echo
     case "$log" in
-      *.gz ) zcat $log|irclogger_tohtml $CHAN $date "$sel" "$conffile" "$header" "$log";;
-      *) cat $log|irclogger_tohtml $CHAN $date "$sel" "$conffile" "$header" "$log";;
+      *.gz ) zcat $log|irclogger_tohtml $CHAN $date \
+             "$sel" "$conffile" "$header" "$log" "$urls";;
+      *) cat $log|irclogger_tohtml $CHAN $date \
+         "$sel" "$conffile" "$header" "$log "$urls"";;
     esac
   fi
 fi

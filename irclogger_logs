@@ -132,7 +132,7 @@ ls -1r *.log* | while read log; do
     fi
     lines="$(wc -l $log|sed -e 's/ *\([^ ]*\).*/\1/')"
     url="${SCRIPT_NAME%/*}/irclogger_log/$CHAN?date=$date"
-    entry="$weeksep<li>$ss<a href='$url'>$ymd</a>, <tt>$day</tt> <small>($lines lines)</small> (alternate forms: <a href='${SCRIPT_NAME%/*}/irclogger_log/$CHAN?date=$date&raw=on'>raw text</a>, <a href='${SCRIPT_NAME%/*}/irclogger_log/$CHAN?date=$date&twiki=on'>twiki syntax</a>, <a href='${SCRIPT_NAME%/*}/irclogger_log/$CHAN?date=$date&text=on'>contents only</a>)$es"
+    entry="$weeksep<li>$ss<a href='$url'>$ymd</a>, <tt>$day</tt> <small>($lines lines)</small> (alternate forms: <a href='${SCRIPT_NAME%/*}/irclogger_log/$CHAN?date=$date&raw=on'>raw text</a>, <a href='${SCRIPT_NAME%/*}/irclogger_log/$CHAN?date=$date&twiki=on'>twiki syntax</a>, <a href='${SCRIPT_NAME%/*}/irclogger_log/$CHAN?date=$date&text=on'>contents only</a>, <a href='${SCRIPT_NAME%/*}/irclogger_log/$CHAN?date=$date&urls=true'>urls only</a>)$es"
     if test "$entry" = "$cached_entry"; then
       cat "$oldcache"; rm -f "$newcache"; break
     fi

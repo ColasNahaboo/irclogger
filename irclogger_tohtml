@@ -1,12 +1,16 @@
 #!/bin/bash
 # $1=channel $2=date('%Y-%m-%d,%a') $3=selected_line $4=config_file $5=header
-# $6=filename
+# $6=filename $7=urls_only(true)
 set -a
 
 CHAN=$1
 if test -e "$4"; then conffile="$4"; . "${conffile%/*}/irclogger_common"
 else logsdir=${logsdir:-/var/log/irclogger}
 fi
+
+urls=${7:-false}
+urls_param=
+if test -n "$7"; then urls_param="&urls=true"; fi
 
 case "$6" in /*)logfile="$6";; *)logfile="$PWD/$6";;
 esac
@@ -45,13 +49,19 @@ navigation () {
          fi;;
     esac
   done
-  if test -n "$pdate"; then pdate=" <a href='${SCRIPT_NAME%/*}/irclogger_log/$CHAN?date=$pdate'>&larr;Prev date</a>"
+  if test -n "$pdate"; then pdate=" <a href='${SCRIPT_NAME%/*}/irclogger_log/$CHAN?date=$pdate$urls_param'>&larr;Prev date</a>"
   else pdate=' (first date)'
   fi
-  if test -n "$ndate"; then ndate=" <a href='${SCRIPT_NAME%/*}/irclogger_log/$CHAN?date=$ndate'>Next date&rarr;</a>"
+  if test -n "$ndate"; then ndate=" <a href='${SCRIPT_NAME%/*}/irclogger_log/$CHAN?date=$ndate$urls_param'>Next date&rarr;</a>"
   else ndate=' (last date)'
   fi
   echo "$pdate$ndate"
+  if $urls; then
+    echo " <a href='${SCRIPT_NAME%/*}/irclogger_log/$CHAN?date=$date'>See all</a>"
+  else
+    echo " <a
+href='${SCRIPT_NAME%/*}/irclogger_log/$CHAN?date=$date&urls=true'>Only urls</a>"
+  fi
   )
 }
 
@@ -86,6 +96,11 @@ s/ftp:\/\/[-a-zA-Z0-9$_@.&+!*"'"'"'(),%\/;=?~:#]*/<a href="&">&<\/a>/g
 }' | ( curline=0  
  while read time who text;do
   let curline=curline+1
+  # skin lines without urls
+  if $urls;then  case "$text" in *'<a href="'*) :;; *) 
+    omn=-100
+    continue;; 
+  esac; fi
   h=${time:1:2}
   m=${time:4:2}
   let mn="(${h#0}*60)+${m#0}"

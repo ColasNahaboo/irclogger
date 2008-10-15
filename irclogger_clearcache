@@ -1,0 +1,11 @@
+#!/bin/bash
+# irclogger v1.1
+set -a
+
+. irclogger_common
+cachedir="${cachedir:-/tmp/.irclogger_logs_cache}"
+echo "Content-type: text/plain"; echo
+echo "Clearing irclogger cache at: $cachedir"
+rm -rf  $cachedir 2>&1
+echo "Cache cleared."
+exit 0
