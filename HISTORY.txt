@@ -3,7 +3,7 @@ changed, and should be restarted after upgrade. Minor versions (1.8a, 1.8e) do
 not modify the python engine so upgrades are done  by just unpacking the
 distribution in place.
 
-1.14b 15 Oct 2008
+1.14c 15 Oct 2008
    MANUAL STEPS for upgrade:
      * if you can be root, do: sudo rm -rf /tmp/.irclogger_logs_cache
        else, go in all the BIN dirs (the dirs where you find the files 
