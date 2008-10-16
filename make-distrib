@@ -18,6 +18,9 @@ echo "## Ok, distribution made: `ls -sh $name-$rev.tgz`"
 echo "## Uploading to $repo"
 if scp -C $name-$rev.tgz $repo/$name-$rev.tgz; then
   echo "## Ok, at $files_repository_url/$name/$name-$rev.tgz"
+  echo "edit: 
+    http://colas.nahaboo.net/Software/IrcLoggerLeftBar
+    http://colas.nahaboo.net/Software/IrcLogger"
 else
   echo "***** UPLOADING ERROR !!! *****"
 fi
