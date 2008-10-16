@@ -57,15 +57,19 @@ navigation () {
   fi
   echo "$pdate$ndate"
   if $urls; then
-    echo " <a href='${SCRIPT_NAME%/*}/irclogger_log/$CHAN?date=$date'>See all</a>"
+    echo " (<b>Showing only urls</b> - <a href='${SCRIPT_NAME%/*}/irclogger_log/$CHAN?date=$date'>See all</a>)"
   else
     echo " <a
-href='${SCRIPT_NAME%/*}/irclogger_log/$CHAN?date=$date&urls=true'>Only urls</a>"
+href='${SCRIPT_NAME%/*}/irclogger_log/$CHAN?date=$date&urls=true'>Show only urls</a>"
   fi
   )
 }
 
-actions="<table width='100%'><tr><td><a href='${SCRIPT_NAME%/*}/irclogger_logs/${1}'>&uarr;back</a> <a href='${SCRIPT_NAME%/*}/irclogger_log_search/$1'>Search</a>`navigation`<td class=legend align=right>(Click on time to select a line by its url)</table>"
+if $urls; then time_label='Click on time to show url line in full context'
+else time_label='Click on time to select a line by its url'
+fi
+
+actions="<table width='100%'><tr><td><a href='${SCRIPT_NAME%/*}/irclogger_logs/${1}'>&uarr;back</a> <a href='${SCRIPT_NAME%/*}/irclogger_log_search/$1'>Search</a>`navigation`<td class=legend align=right>($time_label)</table>"
 
 echo "<html>
   <head>
