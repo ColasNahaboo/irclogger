@@ -9,7 +9,7 @@ if test -e "$conffile"; then
 fi
 logsdir=${logsdir:-/var/log/irclogger}
 passfile=${passfile:-/var/www/passwds/irclogger-passwds}
-private_image="${private_image:-<img src='http://koala.ilog.fr/qbullets/private.gif' width=11 height=10 alt='Password-protected log'>}"
+private_image="${private_image:-<img src='http://colaz.net/qbullets/private.gif' width=11 height=10 alt='Password-protected log'>}"
 
 nl='
 '

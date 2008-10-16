@@ -1,5 +1,3 @@
-fix the URLs in the code from koala.ilog.fr to new
-
 interface with cgiirc:
    * list logged chans in select box on start
    * link to cgiirc to directly jump into a channel from web irclogger pages

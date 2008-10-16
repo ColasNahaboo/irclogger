@@ -45,7 +45,7 @@ Content-type: text/html; charset: ISO-8859-1
 <a href='${SCRIPT_NAME%/*}/irclogger_log_search/$CHAN'>Search</a>
 $MESS
 <p>Files are stored in raw text in MIRC format by 
-<a href='http://koala.ilog.fr/irclogger'>irclogger</a>
+<a href='http://colas.nahaboo.net/Software/IrcLogger>irclogger</a>
 <br>$passwd_ops
 <hr>
 <ul>
@@ -86,7 +86,7 @@ $MESS
       echo "<li><a href='irclogger_logs$auth/$chan'>$chan</a> $lock (<a href='${SCRIPT_NAME%/*}/irclogger_log/$chan'>today log</a>, <a href='${SCRIPT_NAME%/*}/irclogger_log_search/$chan'>search</a>)"
     fi
   done
-  echo "</ul></tt><hr>$backlink<small><i><a href='http://koala.ilog.fr/irclogger'>irclogger</a></i></small></body></html>"
+  echo "</ul></tt><hr>$backlink<small><i><a href='http://colas.nahaboo.net/Software/IrcLogger'>irclogger</a></i></small></body></html>"
   exit 0
 fi
 

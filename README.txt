@@ -1,6 +1,6 @@
 Irclogger installation
 ======================
-IRC Logger python bot, http://koala.ilog.fr/irclogger
+IRC Logger python bot, http://colas.nahaboo.net/Software/IrcLogger
 
 You will need to define 3 places:
    BIN (dir) where to put the CGI web executables and config file
@@ -56,7 +56,7 @@ syntax is bash variable declarations, and can be:
 
 logsdir=/var/log/irclogger
 passfile=/var/www/passwds/irclogger-passwds
-private_image="${private_image:-<img src='http://koala.ilog.fr/qbullets/private.gif' width=11 height=10 alt='Password-protected log'>}"
+private_image="${private_image:-<img src='http://colaz.net/qbullets/private.gif' width=11 height=10 alt='Password-protected log'>}"
 top=URL where the upmost "back" link will bring the user
 
 In the irclogger_dir LOG, one can put files:
