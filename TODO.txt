@@ -43,6 +43,8 @@ channels, as the links to the channel get an extra irclogger_logs component
 
 RSS Feeds (idea by Marc Laporte)
 
+"What hapenned since last login"?
+
 access control: 
    * login with ldap
    * protect by list of users
