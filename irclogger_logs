@@ -1,5 +1,6 @@
 #!/bin/bash
 # irclogger v1.1
+# append /-cc to url to clean the cached list of logs
 set -a
 
 # this depends on your locale
@@ -8,8 +9,9 @@ SUNDAY=`date -d '1970/01/04' +'%a'`
 CHAN=${PATH_INFO#/}
 . irclogger_common
 cachedir="${cachedir:-/tmp/.irclogger_logs_cache}"
-if test "x$CHAN" = "x."; then rm -rf "$cachedir"
-  echo "Location: ${SCRIPT_NAME}"; echo; exit 0
+if test "x$CHAN" = "x-cc"; then
+  rm -rf "$cachedir"
+  echo "Location: ${SCRIPT_NAME%/}"
 fi
 
 if test ! -d $logsdir/$CHAN; then
@@ -45,7 +47,7 @@ Content-type: text/html; charset: ISO-8859-1
 <a href='${SCRIPT_NAME%/*}/irclogger_log_search/$CHAN'>Search</a>
 $MESS
 <p>Files are stored in raw text in MIRC format by 
-<a href='http://colas.nahaboo.net/Software/IrcLogger>irclogger</a>
+<a href='http://colas.nahaboo.net/Software/IrcLogger'>irclogger</a>
 <br>$passwd_ops
 <hr>
 <ul>
@@ -130,7 +132,7 @@ ls -1r *.log* | while read log; do
     then ss='<span class=weekend>';es='</span>'
     else ss=;es=
     fi
-    lines="$(wc -l $log|sed -e 's/ *\([^ ]*\).*/\1/')"
+    lines=`lines $log`
     url="${SCRIPT_NAME%/*}/irclogger_log/$CHAN?date=$date"
     entry="$weeksep<li>$ss<a href='$url'>$ymd</a>, <tt>$day</tt> <small>($lines lines)</small> (alternate forms: <a href='${SCRIPT_NAME%/*}/irclogger_log/$CHAN?date=$date&raw=on'>raw text</a>, <a href='${SCRIPT_NAME%/*}/irclogger_log/$CHAN?date=$date&twiki=on'>twiki syntax</a>, <a href='${SCRIPT_NAME%/*}/irclogger_log/$CHAN?date=$date&text=on'>contents only</a>, <a href='${SCRIPT_NAME%/*}/irclogger_log/$CHAN?date=$date&urls=true'>urls only</a>)$es"
     if test "$entry" = "$cached_entry"; then
