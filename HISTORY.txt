@@ -3,8 +3,18 @@ changed, and should be restarted after upgrade. Minor versions (1.8a, 1.8e) do
 not modify the python engine so upgrades are done  by just unpacking the
 distribution in place.
 
+1.14e 08 Nov 2008
+   In the logs list, the number of lines now only count the actual lines typed
+       by users, not the control messages (has joined, has quit, ...) lines
+   MANUAL STEPS for upgrade:
+     * you should clear the logs list cache to get the correct line count
+       by either calling once your irclogger_logs url with /-cc appended, 
+       e.g: http://my-site.foo.com/irclogger/irclogger_logs/-cc
+       or doing a "rm -rf  /tmp/.irclogger_logs_cache" on the server
+
 1.14d 16 Oct 2008
    Some clarification on navigation labels
+
 1.14c 15 Oct 2008
    MANUAL STEPS for upgrade:
      * if you can be root, do: sudo rm -rf /tmp/.irclogger_logs_cache
