@@ -11,18 +11,16 @@ opterrors="-$FORM_error"
 unset chkerror;if [ -n "$FORM_error" ]; then chkerror[$FORM_error]=checked
 else chkerror[0]=checked
 fi
-if [ -n "$FORM_verbatim" ]; then optverb="-iO -0 -k";opterrors=
+if [ -n "$FORM_verbatim" ]; then optverb="-0 -k";opterrors=
 chkverbatim=checked
-else optverb="-i";chkverbatim=
+else optverb="";chkverbatim=
 fi
 if [ -n "$FORM_word" ]; then optword="-w";chkword=checked
 else optword=;chkword=
 fi
-if [ -n "$FORM_case" ]; then optcase='-iO';chkcase=checked
-  if [ "x$optverb" = x-i ]; then optverb=
-  fi
-else chkcase=
-# no else: in default case, trust optverb
+if [ -n "$FORM_case" ]; then optcase='';chkcase=checked
+else 
+  if "x$optverb" = x; then chkcase='-i'; fi
 fi
 STYLE=
 cd $logsdir
@@ -47,9 +45,11 @@ $locked
   <input type=hidden name=action value=search> by 
   <a href='http://www.tgries.de/agrep/agrephlp.html#AGREPMETASYMBOLS'>agrep</a>
   <br><i>agrep is grep with operators <b>,</b> for OR and <b>;</b> for AND
-  and approximate searching</i>.
+  and approximate searching.
+  <br>To search when Colas said Doh!, search: </1><tt>colas;doh!</tt>
   <p>Options:<ul>
-  <li><label><input type=checkbox name=case $chkcase>Case and accents sensitive</label>
+  <li><label><input type=checkbox name=case $chkcase>Case sensitive: searching
+for <tt>log</tt> will not find <tt>Log</tt></label>
   <li><label><input type=checkbox name=verbatim $chkverbatim>Verbatim 
       (no approximations nor regular expressions nor operators)</label>
   <li><label><input type=checkbox name=word $chkword>Word search: Searching for \"win\"
@@ -90,6 +90,10 @@ main () {
 }
 
 search () {
+  if ! which agrep >/dev/null; then 
+    echo '<p><b style="color:red">*** ERROR: agrep not found!***</b><hr><p>'
+    return
+  fi
   echo '<h2>Results:</h2>'
   # for agrep, we only list uncompressed files (*.log instead of *.log*)
   agrep -n $optcase $optverb $optword $opterrors "$search" /dev/null `ls -1r *log` | ( ofile='';matches=0; files=0

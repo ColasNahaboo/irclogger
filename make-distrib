@@ -14,7 +14,7 @@ cp -a * $dir/$name
 cd $dir
 tar cfz /tmp/$name-$rev.tgz $name
 cd /tmp
-echo "## Ok, distribution made: `ls -sh $name-$rev.tgz`"
+echo "## Ok, distribution made: `ls -sh /tmp/$name-$rev.tgz`"
 echo "## Uploading to $repo"
 if scp -C $name-$rev.tgz $repo/$name-$rev.tgz; then
   echo "## Ok, at $files_repository_url/$name/$name-$rev.tgz"
@@ -25,4 +25,4 @@ else
   echo "***** UPLOADING ERROR !!! *****"
 fi
 
-rm -rf $dir /tmp/$name-$rev.tgz
+#rm -rf $dir /tmp/$name-$rev.tgz

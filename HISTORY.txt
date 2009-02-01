@@ -1,10 +1,28 @@
 Notes: major versions (1.5, 1.8) indicates that the python IRC bot have been
 changed, and should be restarted after upgrade. Minor versions (1.8a, 1.8e) do
 not modify the python engine so upgrades are done  by just unpacking the
-distribution in place.
+distribution in place, with perhaps some MANUAL STEPS if spedified.
 
-1.14f 
-   twiki markup renamed as TML,  irclogger_totwiki becomes irclogger_totml
+1.14f 01 Feb 2009
+   * twiki markup renamed as TML,  irclogger_totwiki becomes irclogger_totml
+   * bugfix: in search, the "Case sensitive" and ""Verbatim" options
+     results had display bugs (extra newlines). Bug found by Will Norris.
+   * MANUAL STEPS for upgrade:
+      * from install dir; ln -s $PWD/irclogger_cgiparse $BIN
+        (hint: do locate irclogger_log_search to find $BIN dirs)
+        E.g: if your install dir is /usr/local/irclogger, and you downloaded
+        the distrib in /tmp:
+        1) cd /usr/local
+        2) tar xfz /tmp/irclogger-1.14f.tgz
+           for BIN in $(locate -r '/irclogger.conf$'); do
+             ln -s /usr/local/irclogger/irclogger_totml ${BIN%/*}
+           done
+      * you should clear the logs list cache 
+        by either calling once your irclogger_logs url with /-cc appended, 
+        e.g: http://my-site.foo.com/irclogger/irclogger_logs/-cc
+        or doing a "sudo rm -rf  /tmp/.irclogger_logs_cache" on the server
+        NOTE: this is optional and cosmetic in order to replace the twiki name
+        by TML.
 
 1.14e 08 Nov 2008
    In the logs list, the number of lines now only count the actual lines typed
