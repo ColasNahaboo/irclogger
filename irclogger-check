@@ -6,7 +6,7 @@
 
 server=irc.freenode.net
 botname='[LOGGER]'
-logs=/www/twikiirc/logs
+logs=/www/irclogger/logs
 
 kill_bot () {
   ps awx|grep irclogger|grep python|fgrep $server| \

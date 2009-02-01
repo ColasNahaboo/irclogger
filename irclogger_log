@@ -7,7 +7,7 @@ GCF=4
 
 date="$FORM_date"
 raw="$FORM_raw"
-twiki="$FORM_twiki"
+tml="$FORM_tml"
 text="$FORM_text"
 urls="$FORM_urls"
 
@@ -77,18 +77,18 @@ if [ "$raw" = on ]; then
       *) cat $log;;
     esac
   fi
-elif [ "$twiki" = on ]; then
+elif [ "$tml" = on ]; then
   if [ "$gzip" = on ]; then
     echo "Content-Type: text/plain"; echo "Content-Encoding: gzip"; echo
     case "$log" in 
-      *.gz ) zcat $log|irclogger_totwiki $CHAN $date "$sel" "$conffile" "$header" "$log"|gzip -$GCF;;
-      *) cat $log|irclogger_totwiki $CHAN $date "$sel" "$conffile" "$header" "$log"|gzip -$GCF;;
+      *.gz ) zcat $log|irclogger_totml $CHAN $date "$sel" "$conffile" "$header" "$log"|gzip -$GCF;;
+      *) cat $log|irclogger_totml $CHAN $date "$sel" "$conffile" "$header" "$log"|gzip -$GCF;;
     esac 
   else
     echo "Content-Type: text/plain"; echo
     case "$log" in
-      *.gz ) zcat $log|irclogger_totwiki $CHAN $date "$sel" "$conffile" "$header" "$log";;
-      *) cat $log|irclogger_totwiki $CHAN $date "$sel" "$conffile" "$header" "$log";;
+      *.gz ) zcat $log|irclogger_totml $CHAN $date "$sel" "$conffile" "$header" "$log";;
+      *) cat $log|irclogger_totml $CHAN $date "$sel" "$conffile" "$header" "$log";;
     esac
   fi
 elif [ "$text" = on ]; then

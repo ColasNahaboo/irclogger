@@ -19,7 +19,7 @@ iseven=true
 
 eol=""
 
-echo "<!-- add this for non-koalaskin twikis --><style type='text/css'>dt { font-weight: bold;float: left;display:inline;margin-right: 1em} dd { display:block; margin-left: 2em}</style>";echo
+echo "<!-- Some styling for better description lists --><style type='text/css'>dt { font-weight: bold;float: left;display:inline;margin-right: 1em} dd { display:block; margin-left: 2em}</style>";echo
 
 
 sed -e '{

@@ -153,12 +153,14 @@ irclogger_tohtml [bash]
     If a style.css file is defined, it replaces the one built-in in 
     irclogger_tohtml in var DEFSTYLE
 
-irclogger_totwiki [bash]
-    irclogger_totwiki channel date selected < log
-    Pretty-prints in a text form incluable in TWiki (see http://twiki.org)
+irclogger_totml [bash]
+    irclogger_totml channel date selected < log
+    Pretty-prints in a text form incluable in Wikis using the TML markup
+    (Topic Markup Language), see http://foswiki.org/System/TextFormattingRules
+    TML is used by Foswiki and TWiki
 
 irclogger_totext [bash]
-    irclogger_totwiki channel date selected < log
+    irclogger_totext channel date selected < log
     prints only the contents without control messages and nicknames
     useful for getting meeting notes by a single scribe + correcters
 

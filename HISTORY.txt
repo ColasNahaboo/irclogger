@@ -3,6 +3,9 @@ changed, and should be restarted after upgrade. Minor versions (1.8a, 1.8e) do
 not modify the python engine so upgrades are done  by just unpacking the
 distribution in place.
 
+1.14f 
+   twiki markup renamed as TML,  irclogger_totwiki becomes irclogger_totml
+
 1.14e 08 Nov 2008
    In the logs list, the number of lines now only count the actual lines typed
        by users, not the control messages (has joined, has quit, ...) lines
