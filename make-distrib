@@ -12,6 +12,7 @@ repo=$files_repository/$name
 mkdir -p $dir/$name
 cp -a * $dir/$name
 cd $dir
+rm *.pyc
 tar cfz /tmp/$name-$rev.tgz $name
 cd /tmp
 echo "## Ok, distribution made: `ls -sh /tmp/$name-$rev.tgz`"

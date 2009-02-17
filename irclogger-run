@@ -11,6 +11,8 @@ url="http://irc-koalateam.nahaboo.org/"
 # or you could be kicked on connecting for flooding!
 # if a file $logsdir/CHANNELS.last exists, its contents wil override this var
 channels="wow"
+# Uncomment this if the IRC server has a password (and put the relevant passwd)
+# export IRC_SERVER_PASSWORD = serverpasswd
 
 while true; do
     if test -e "$logsdir/CHANNELS.last"; then

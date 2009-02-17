@@ -44,6 +44,7 @@ PING='PING'
 PONG='PONG'
 USER='USER'
 NICK='NICK'
+PASS='PASS'
 JOIN='JOIN'
 PART='PART'
 INVITE='INVITE'
@@ -77,6 +78,7 @@ class T(asynchat.async_chat):
     def makeConn(self, host, port):
         self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
         debug("connecting to...", host, port)
+        self.passwd = os.getenv('IRC_SERVER_PASSWORD')
         self.connect((host, port))
 
         self.bufIn = ''
@@ -94,6 +96,8 @@ class T(asynchat.async_chat):
 
         #@@ hmm... RFC says mode is a bitfield, but
         # irc.py by @@whathisname says +iw string.
+        if self.passwd:
+            self.todo([PASS, self.passwd])
         self.todo([NICK, self.nick])
         self.todo([USER, self.userid, "+iw", self.nick], self.fullName)
     def handle_close (self):

@@ -1,26 +1,26 @@
 #!/bin/bash
+echo DEBUG script, connects to localhost, writes in /tmp/irclogger-logs
 
 # host[:port]
 host=localhost
 # use the same as in your irclogger.conf file in BIN cgi-bin dir
 # errors of this bot will go in $logsdir/irclogger.log
-logsdir="_LOGS_"
+logsdir="/tmp/irclogger-logs"
 # URL where to go to see web logs
-url="_URL_"
+url="http://localhost/irclogger-logs"
 # initial channels to log. can be empty. Be cautious in putting more than one,
 # or you could be kicked on connecting for flooding!
 # if a file $logsdir/CHANNELS.last exists, its contents wil override this var
-channels="_CHAN_"
+channels="irclogger-test"
 # Uncomment this if the IRC server has a password (and put the relevant passwd)
-# export IRC_SERVER_PASSWORD = serverpasswd
+unset IRC_SERVER_PASSWORD
 
-while true; do
+mkdir -p $logsdir
     if test -e "$logsdir/CHANNELS.last"; then
 	channels=`cat "$logsdir/CHANNELS.last"`
     fi
-    echo "Starting at `date`, logging channels $channels" >>"$logsdir/irclogger.log"
-    /usr/local/irclogger/irclogger $host '[LOGGER]' \
-	"$logsdir" "$url" $channels>>"$logsdir/irclogger.log" 2>&1 </dev/null
-    echo "Stopping at `date`" >>"$logsdir/irclogger.log"
-    sleep 45 # avoid being kicked for too fast reconnection. should be > 40s
-done
+    echo "Starting at `date`, logging channels $channels" 
+    /usr/local/irclogger/irclogger $host '[TEST_LOGGER]' \
+	"$logsdir" "$url" $channels>>"$logsdir/irclogger.log"
+    echo "Stopping at `date`"
+chmod -R a+rwX $logsdir 2>/dev/null

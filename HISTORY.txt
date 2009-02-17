@@ -3,6 +3,14 @@ changed, and should be restarted after upgrade. Minor versions (1.8a, 1.8e) do
 not modify the python engine so upgrades are done  by just unpacking the
 distribution in place, with perhaps some MANUAL STEPS if spedified.
 
+1.15  17 Feb 2009
+   * MANUAL STEPS for upgrade: you need to restart your irclogger daemon
+     (just kill the irclogger processes, the irclogger-run* launchers will
+      restart them in 45s)
+   * irclogger can now connect to password-protected irc sites. Just set the
+     environment variable IRC_SERVER_PASSWORD in the irclogger-run launcher.
+     No need to upgrade if you connect to password-less servers.
+
 1.14f 01 Feb 2009
    * twiki markup renamed as TML,  irclogger_totwiki becomes irclogger_totml
    * bugfix: in search, the "Case sensitive" and ""Verbatim" options
