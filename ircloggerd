@@ -330,7 +330,6 @@ def main(hostName, port, chan):
             if lentry not in directories:
                directories.append('#' + lentry)
 
-   # mainloop
    c.makeConn(hostName, port)
    try: loop(c)
    except:

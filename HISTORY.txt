@@ -3,6 +3,17 @@ changed, and should be restarted after upgrade. Minor versions (1.8a, 1.8e) do
 not modify the python engine so upgrades are done  by just unpacking the
 distribution in place, with perhaps some MANUAL STEPS if spedified.
 
+1.15a 14 Mar 2009
+   * *warning*: now needs a GNU sed (a sed with the -r option for extended 
+     regexpes, actually) for html rendering, for:
+   * html rendering: now properly exclude dots, commas and ending parenthesis
+     from urls. You can write http://foo/bar, or (http://foo/bar) and it will
+     only make a link to the proper URL. Note that it will still properly
+     match urls with parentheses in them, such as: 
+     http://en.wikipedia.org/wiki/Paris_(genus)
+   * html rendering now recognizes also urls with https protocol (in addition
+     to http and ftp)
+
 1.15  17 Feb 2009
    * MANUAL STEPS for upgrade: you need to restart your irclogger daemon
      (just kill the irclogger processes, the irclogger-run* launchers will

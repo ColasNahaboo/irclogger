@@ -24,7 +24,7 @@ $Id: ircAsyncD.py,v 1.9 2003/09/13 colas Exp $
 import string, re
 import socket
 import asyncore, asynchat
-
+import os
 
 
 

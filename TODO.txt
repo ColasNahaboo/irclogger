@@ -1,3 +1,7 @@
+BUGFIXES:
+   * recognize https:// urls in log
+   * do not include the last closing , . ) in urls at eol or followed by space
+
 interface with cgiirc:
    * list logged chans in select box on start
    * link to cgiirc to directly jump into a channel from web irclogger pages
