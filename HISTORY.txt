@@ -3,6 +3,10 @@ changed, and should be restarted after upgrade. Minor versions (1.8a, 1.8e) do
 not modify the python engine so upgrades are done  by just unpacking the
 distribution in place, with perhaps some MANUAL STEPS if spedified.
 
+1.15b ?
+   * sample /etc/init.d/irclogger startup script for red hat contributed by an
+     user
+
 1.15a 14 Mar 2009
    * *warning*: now needs a GNU sed (a sed with the -r option for extended 
      regexpes, actually) for html rendering, for:

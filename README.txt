@@ -90,8 +90,11 @@ to run:
 ======
 
 copy irclogger-run in /usr/local/bin, edit it, and run it once at startup,
-via start-stop-daemon for instance. Copy it under as many copies as you want
-to run separate irclogger bots.
+via start-stop-daemon for instance or a @reboot line in a crontab. 
+Copy it under as many copies as you want to run separate irclogger bots.
+
+A sample init.d-irclogger-sample is provided that you can copy as 
+/etc/init.d/irclogger (red hat version)
 
 On web server:
 ==============
