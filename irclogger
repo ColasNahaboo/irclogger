@@ -1,5 +1,5 @@
 #!/usr/bin/python
-VERSION = """IRC Logger python bot v1.15, http://colas.nahaboo.net/Software/IrcLogger"""
+VERSION = """IRC Logger python bot v1.16, http://colas.nahaboo.net/Software/IrcLogger"""
 # irclogger server nickname logsdir url [start_channels...]
 #           if args are "." they are replaced by default values
 
@@ -92,6 +92,9 @@ offPrefix = re.compile("^[^ ]+ [[]off[]]", re.I)
 
 def log(channelname, text): 
    fn = time.strftime(_logfilename, time.gmtime(time.time()))
+   # some bogus server messages may end with bot name as channel, ignore
+   if channelname == NickName:
+      return
    # channels are #-prefixed, but we store in dirs without the prefix
    channel = channelname.lower()
    if channel not in directories: 

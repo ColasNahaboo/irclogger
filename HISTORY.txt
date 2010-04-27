@@ -3,7 +3,13 @@ changed, and should be restarted after upgrade. Minor versions (1.8a, 1.8e) do
 not modify the python engine so upgrades are done  by just unpacking the
 distribution in place, with perhaps some MANUAL STEPS if spedified.
 
-1.15b ?
+1.16 27 Apr 2010
+    * MANUAL STEPS for upgrade: you need to restart your irclogger daemon
+     (just kill the irclogger processes, the irclogger-run* launchers will
+      restart them in 45s)
+   * BUGFIX: http://trac.colas.nahaboo.net/irclogger/ticket/10
+     on some IRC servers, a bogus log dir ending in ] was created, making the
+     bot crash.
    * sample /etc/init.d/irclogger startup script for red hat contributed by an
      user
 
