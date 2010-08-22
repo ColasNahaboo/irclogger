@@ -30,7 +30,7 @@ main () {
   mkdir -p "$LOG/.exp";chmod a+rwx "$LOG/.exp"
   create_files "$PASS"
   if test ! -e "$BIN/.htaccess"; then 
-    sed -e 's/AuthUserFile .*/AuthUserFile '"$PASS/" <htaccess.sample >"$BIN/.htaccess"
+    sed -e 's|AuthUserFile .*|AuthUserFile '"$PASS|" <htaccess.sample >"$BIN/.htaccess"
   fi
   install_bashlib
   ln -fs $S/irclogger_* $S/nph-irclogger_reset_auth "$BIN"
@@ -54,14 +54,12 @@ abort () {
 }
 
 apache_check () {
-  if grep -q "ScriptAlias .* $BIN" /etc/apache/httpd.conf; then :; else
-    echo "Add to you apache config (/etc/apache/httpd.conf)"
-    d="/${URL#*//*/}"
-    echo "  ScriptAlias $d $BIN
-  <Location $d>
-    AllowOverride All
-  </Location>"
-  fi
+  d="/${URL#*//*/}"
+  echo "### Be sure to add to your apache configuration of the 4 lines:
+    ScriptAlias $d $BIN
+    <Location $d>
+      AllowOverride All
+    </Location>"
 }
 
 agrep_check () {

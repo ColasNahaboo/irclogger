@@ -1,6 +1,10 @@
 BUGFIXES:
-   * recognize https:// urls in log
-   * do not include the last closing , . ) in urls at eol or followed by space
+install:
+   * trim / at end of args
+   * provide a simplified install for apache2, in a virtual host
+   * document how to change the bot name
+   * document how to connect to passwd-protected ircs
+   * provide a simple index.html page if none exists yet
 
 interface with cgiirc:
    * list logged chans in select box on start
