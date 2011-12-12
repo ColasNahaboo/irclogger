@@ -1,4 +1,16 @@
 BUGFIXES:
+for Gizmokid2005:
+   * be able to prevent [off] and /off on specific channels
+     <ColasHome> for disabling stopping the bot: comment line 209 of irclogger
+     <ColasHome> #          if mo: channelCommand(channel, mo.group(1), c)
+     <ColasHome> for disabling [off] comment line 214
+     <ColasHome> #          if not re.match(offPrefix, text):
+
+prevent crawling:
+   * start search, alternate views on a /xxx url so that they can be excluded
+     by /robots.txt
+   * use meta noindex <meta name="robots" content="noindex"> on index pages
+
 install:
    * trim / at end of args
    * provide a simplified install for apache2, in a virtual host

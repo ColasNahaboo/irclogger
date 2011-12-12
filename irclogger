@@ -94,10 +94,16 @@ def log(channelname, text):
    fn = time.strftime(_logfilename, time.gmtime(time.time()))
    # some bogus server messages may end with bot name as channel, ignore
    if channelname == NickName:
+      print >> sys.stderr, "bogus line: channelname=" +  channelname + ", text=" + text
       return
+   # channel empty? ignore
+   if channelname == '':
+      print >> sys.stderr, "bogus line: channel name empty, text=" + text
+      return   
    # channels are #-prefixed, but we store in dirs without the prefix
    channel = channelname.lower()
-   if channel not in directories: 
+   if channel not in directories:
+      print "joining channel: " + channel
       # if it fails, the exception may as well be raised
       os.mkdir(os.path.join(_logsdir, channel[1:]))
       directories.append(channel)
