@@ -3,8 +3,14 @@ changed, and should be restarted after upgrade. Minor versions (1.8a, 1.8e) do
 not modify the python engine so upgrades are done  by just unpacking the
 distribution in place, with perhaps some MANUAL STEPS if spedified.
 
+1.16a 30 Nov 2014
+   * Fix provided by Christopher Foo, irclogger was confused when users typed
+     a backslash at the en dof a line
+   * You can use space to sepoarate words in the search now, not only ;
+   * minor fixes
+
 1.16 27 Apr 2010
-    * MANUAL STEPS for upgrade: you need to restart your irclogger daemon
+   * MANUAL STEPS for upgrade: you need to restart your irclogger daemon
      (just kill the irclogger processes, the irclogger-run* launchers will
       restart them in 45s)
    * BUGFIX: http://trac.colas.nahaboo.net/irclogger/ticket/10
