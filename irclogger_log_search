@@ -45,8 +45,8 @@ $locked
   <input type=hidden name=action value=search> by 
   <a href='http://www.tgries.de/agrep/agrephlp.html#AGREPMETASYMBOLS'>agrep</a>
   <br><i>agrep is grep with operators <b>,</b> for OR and <b>;</b> for AND
-  and approximate searching.
-  <br>To search when Colas said Doh!, search: </1><tt>colas;doh!</tt>
+  and approximate searching. Space can be used instead of ;
+  <br>To search when Colas said Doh!, search: </1><tt>colas doh!</tt>
   <p>Options:<ul>
   <li><label><input type=checkbox name=case $chkcase>Case sensitive: searching
 for <tt>log</tt> will not find <tt>Log</tt></label>
@@ -78,6 +78,8 @@ main () {
     PREVSEARCH="$search"
     if [ -n "$FORM_verbatim" ]; then
       search="${search//,/\\,}";search="${search//;/\\;}"
+    else
+      search="${search// /;}"
     fi
     expanse_compressed *.log.gz
     RESULTS=`search "$search"`
