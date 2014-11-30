@@ -69,3 +69,6 @@ access control:
    * login with ldap
    * protect by list of users
    * with date ranges? (user foo allowed 2005-2007)
+
+For thierry.pasquier@emf.ccsti.eu & jacques@lavignotte.org
+   * pouvoir garder le chanop

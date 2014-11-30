@@ -27,7 +27,7 @@ s/&/\&amp;/g
 s/</\&lt;/g
 s/>/\&gt;/g
 }' | ( read; curline=1  # 1st line is join of the bot
- while read time who text;do
+ while read -r time who text;do
   let curline=curline+1
   if [ "$who" = "*" ]; then who="-"; fi
   if [ "$who" = "&lt;WebGate&gt;" -o "$who" = "Webgate" ]; then 

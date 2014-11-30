@@ -99,7 +99,7 @@ s/(http|https|ftp):\/\/[-a-zA-Z0-9$_@.&+!*"'"'"'(),%\/;=?~:#]*/<a href="&">&<\/a
 s/(<a href=")([^"]*)([.,])(">[^<]*)\3(<\/a>)/\1\2\4\5\3/g
 s/(<a href=")([^("]*)([)])(">[^<]*)\3(<\/a>)/\1\2\4\5\3/g
 }' | ( curline=0  
- while read time who text;do
+ while read -r time who text;do
   let curline=curline+1
   # skin lines without urls
   if $urls;then  case "$text" in *'<a href="'*) :;; *) 

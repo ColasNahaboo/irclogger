@@ -6,7 +6,7 @@
 
 main () {
   grep '^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9] [[][0-9][0-9]:[0-9][0-9][]]' | \
-  while read date time who text; do
+  while -r read date time who text; do
     case "$text" in [[][oO][fF][fF][]]*) continue;; esac
     if test x"$who" = 'x<--' -o x"$who" = 'x-->'; then
       who='***'
