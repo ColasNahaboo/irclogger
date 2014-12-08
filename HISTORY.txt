@@ -3,6 +3,12 @@ changed, and should be restarted after upgrade. Minor versions (1.8a, 1.8e) do
 not modify the python engine so upgrades are done  by just unpacking the
 distribution in place, with perhaps some MANUAL STEPS if spedified.
 
+1.16b 08 Dec 2014
+   * The case-sensitive option was bugged. Found & fixed by Christopher Foo
+   * Searches are now timeouted, that is aborted if not done in 60 seconds.
+     This timeout value is settable via the new variable search_timeout in
+     irclogger.conf as a number in seconds.
+
 1.16a 30 Nov 2014
    * Fix provided by Christopher Foo, irclogger was confused when users typed
      a backslash at the end of a line

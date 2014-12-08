@@ -58,6 +58,8 @@ logsdir=/var/log/irclogger
 passfile=/var/www/passwds/irclogger-passwds
 private_image="${private_image:-<img src='http://colaz.net/qbullets/private.gif' width=11 height=10 alt='Password-protected log'>}"
 top=URL where the upmost "back" link will bring the user
+search_timeout=N  where N is a timeout in seconds to limit the time a search
+                  takes. Defaults to 60
 
 In the irclogger_dir LOG, one can put files:
    style.css  that will be included in all html pages

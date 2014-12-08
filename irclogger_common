@@ -10,7 +10,7 @@ fi
 logsdir=${logsdir:-/var/log/irclogger}
 passfile=${passfile:-/var/www/passwds/irclogger-passwds}
 private_image="${private_image:-<img src='http://colaz.net/qbullets/private.gif' width=11 height=10 alt='Password-protected log'>}"
-
+search_timeout="${search_timeout:-60}"
 nl='
 '
 

@@ -98,7 +98,7 @@ search () {
   fi
   echo '<h2>Results:</h2>'
   # for agrep, we only list uncompressed files (*.log instead of *.log*)
-  agrep -n $optcase $optverb $optword $opterrors "$search" /dev/null `ls -1r *log` | ( ofile='';matches=0; files=0
+  timeout "$search_timeout" agrep -n $optcase $optverb $optword $opterrors "$search" /dev/null `ls -1r *log` | ( ofile='';matches=0; files=0
     while read -r line; do
       file="${line%%:*}";rest="${line#*:}";num="${rest%%:*}";rest="${rest#*:}"
       num="${num// /}"
