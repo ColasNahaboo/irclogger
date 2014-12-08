@@ -20,7 +20,7 @@ else optword=;chkword=
 fi
 if [ -n "$FORM_case" ]; then optcase='';chkcase=checked
 else 
-  if "x$optverb" = x; then chkcase='-i'; fi
+  if [ "x$optverb" = x ]; then optcase='-i'; fi
 fi
 STYLE=
 cd $logsdir
