@@ -3,6 +3,16 @@ changed, and should be restarted after upgrade. Minor versions (1.8a, 1.8e) do
 not modify the python engine so upgrades are done  by just unpacking the
 distribution in place, with perhaps some MANUAL STEPS if spedified.
 
+1.16c 16 Jan 2018
+   * New option cachepages=on to cache individual pages for each day. 
+     Default is still only to cache the listings of all pages in a channel.
+     This option may be set in the irclogger.conf file in the installation
+     directory, as for the other options.
+   * The existing cachedir=path option is now documented. It defines where the
+     cache files are stored, and defaults to /tmp/.irclogger_logs_cache
+   * No other changes, so no need to upgrade if you do not plan to use the new
+     cachepages=on option
+
 1.16b 08 Dec 2014
    * The case-sensitive option was bugged. Found & fixed by Christopher Foo
    * Searches are now timeouted, that is aborted if not done in 60 seconds.

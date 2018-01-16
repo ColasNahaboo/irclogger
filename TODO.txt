@@ -1,3 +1,5 @@
+make-distrib: prevent cloberring an existing distrib
+
 BUGFIXES:
 for Gizmokid2005:
    * be able to prevent [off] and /off on specific channels

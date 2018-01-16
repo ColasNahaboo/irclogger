@@ -4,6 +4,8 @@ set -a
 . irclogger_common
 PATH="$PATH:/usr/local/bin:$PWD"
 GCF=4
+cachedir="${cachedir:-/tmp/.irclogger_logs_cache}"
+[ -n "$cachepages" ] && do_cachepages=true || do_cachepages=false
 
 date="$FORM_date"
 raw="$FORM_raw"
@@ -14,6 +16,7 @@ urls="$FORM_urls"
 sel="$FORM_sel"
 CHAN=${PATH_INFO#/}
 CHAN=${CHAN:-main}
+mimetype=text/plain
 
 if test ! -d $logsdir/$CHAN; then
   echo 'Content-type: text/html; charset: ISO-8859-1';echo
@@ -38,7 +41,7 @@ else
   fi
 fi
 
-error_file_not_found () {
+error_file_not_found() {
 cat << EOF	
 Content-type: text/html
 
@@ -52,6 +55,26 @@ EOF
 exit 0
 }
 
+catz() { case "$1" in *.gz) zcat "$1";; *) cat "$1";; esac; }
+
+compress_cache() { gzip -qk9 $cache; }
+
+emitheader() {
+  if [ "$gzip" = on ]; then
+    echo "Content-Type: $mimetype"; echo "Content-Encoding: gzip"; echo
+  else
+    echo "Content-Type: $mimetype"; echo
+  fi
+}
+
+emitcache() { 
+  if [ "$gzip" = on ]; then cat $cache.gz
+  else cat $cache
+  fi
+}
+
+emitstream() { if [ "$gzip" = on ]; then gzip -$GCF; else cat; fi; }
+
 if [ -z "$date" ]; then 
   echo "Location: $CHAN?date=`date -u +'%Y-%m-%d,%a'`";echo
 fi
@@ -64,65 +87,33 @@ if [ ! -e $log ]; then
 fi
 
 if [ "$raw" = on ]; then
-  if [ "$gzip" = on ]; then
-    echo "Content-Type: text/plain"; echo "Content-Encoding: gzip"; echo
-    case "$log" in 
-      *.gz ) cat $log;; 
-      *) gzip -$GCF < $log;; 
-    esac 
-  else
-    echo "Content-Type: text/plain"; echo
-    case "$log" in
-      *.gz ) zcat $log;;
-      *) cat $log;;
-    esac
-  fi
+  ext=raw
+  gen() { cat; }
 elif [ "$tml" = on ]; then
-  if [ "$gzip" = on ]; then
-    echo "Content-Type: text/plain"; echo "Content-Encoding: gzip"; echo
-    case "$log" in 
-      *.gz ) zcat $log|irclogger_totml $CHAN $date "$sel" "$conffile" "$header" "$log"|gzip -$GCF;;
-      *) cat $log|irclogger_totml $CHAN $date "$sel" "$conffile" "$header" "$log"|gzip -$GCF;;
-    esac 
-  else
-    echo "Content-Type: text/plain"; echo
-    case "$log" in
-      *.gz ) zcat $log|irclogger_totml $CHAN $date "$sel" "$conffile" "$header" "$log";;
-      *) cat $log|irclogger_totml $CHAN $date "$sel" "$conffile" "$header" "$log";;
-    esac
-  fi
+  ext=tml
+  gen() { irclogger_totml $CHAN $date "$sel" "$conffile" "$header" "$log"; }
 elif [ "$text" = on ]; then
-  if [ "$gzip" = on ]; then
-    echo "Content-Type: text/plain"; echo "Content-Encoding: gzip"; echo
-    case "$log" in 
-      *.gz ) zcat $log|irclogger_totext $CHAN $date "$sel" "$conffile" "$header" "$log"|gzip -$GCF;;
-      *) cat $log|irclogger_totext $CHAN $date "$sel" "$conffile" "$header" "$log"|gzip -$GCF;;
-    esac 
-  else
-    echo "Content-Type: text/plain"; echo
-    case "$log" in
-      *.gz ) zcat $log|irclogger_totext $CHAN $date "$sel" "$conffile" "$header" "$log";;
-      *) cat $log|irclogger_totext $CHAN $date "$sel" "$conffile" "$header" "$log";;
-    esac
-  fi
+  ext=txt
+  gen() { irclogger_totext $CHAN $date "$sel" "$conffile" "$header" "$log"; }
 else
-  if [ "$gzip" = on ]; then
-    echo "Content-Type: text/html"; echo "Content-Encoding: gzip"; echo
-    case "$log" in 
-      *.gz ) zcat $log|irclogger_tohtml $CHAN $date \
-             "$sel" "$conffile" "$header" "$log" "$urls"|gzip -$GCF;;
-      *) cat $log|irclogger_tohtml $CHAN $date \
-         "$sel" "$conffile" "$header" "$log" "$urls"|gzip -$GCF;;
-    esac 
-  else
-    echo "Content-Type: text/html"; echo
-    case "$log" in
-      *.gz ) zcat $log|irclogger_tohtml $CHAN $date \
-             "$sel" "$conffile" "$header" "$log" "$urls";;
-      *) cat $log|irclogger_tohtml $CHAN $date \
-         "$sel" "$conffile" "$header" "$log "$urls"";;
-    esac
+  mimetype=text/html
+  ext=html
+  gen() { irclogger_tohtml $CHAN $date "$sel" "$conffile" "$header" "$log" "$urls"; }
+fi
+
+if $do_cachepages; then
+  cachepagedir="$cachedir`/bin/pwd`/PAGES/$CHAN/"
+  mkdir -p $cachepagedir
+  cache=$cachepagedir$date.$ext
+  if ! [ $cache -nt $log ]; then
+    catz $log | gen >$cache
+    compress_cache
   fi
+  emitheader
+  emitcache
+else
+  emitheader
+  catz $log | gen | emitstream
 fi
 
 exit 0

@@ -60,6 +60,10 @@ private_image="${private_image:-<img src='http://colaz.net/qbullets/private.gif'
 top=URL where the upmost "back" link will bring the user
 search_timeout=N  where N is a timeout in seconds to limit the time a search
                   takes. Defaults to 60
+cachedir=path     where the list of logs will be cached. 
+		  Default to /tmp/.irclogger_logs_cache
+cachepages=on     if non empty, will also cache the individual pages into
+		  cachedir above (default is not to cache)
 
 In the irclogger_dir LOG, one can put files:
    style.css  that will be included in all html pages

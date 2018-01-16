@@ -111,10 +111,10 @@ todaydate="`date -u +'%Y-%m-%d'`"
 oldweek=`date -u +'%V'`
 
 #cache is lines: L[YYYYMMDD]="html-of-entry"
-ccahedirchan="${cachedir}`/bin/pwd`"
-if test ! -d "$ccahedirchan"; then mkdir -p "$ccahedirchan"; fi
-oldcache="$ccahedirchan/logs"
-newcache="$ccahedirchan/logs.$$"
+cachedirchan="${cachedir}`/bin/pwd`"
+if test ! -d "$cachedirchan"; then mkdir -p "$cachedirchan"; fi
+oldcache="$cachedirchan/logs"
+newcache="$cachedirchan/logs.$$"
 if test -e "$oldcache"; then source "$oldcache";fi
 
 #important: all log entries must be on a single line
