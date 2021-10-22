@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python2
 """
 
 ircAsync -- An asynchronous IRC client interface.
