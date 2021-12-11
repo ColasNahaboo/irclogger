@@ -11,7 +11,7 @@ irclogger is a simple "bot", a program connecting as a client on IRC  servers to
 ## More info
 
 - its web page: https://colas.nahaboo.net/Code/IrcLogger
-- its technical documentation in the [README.txt] file, with the Installation instructions
+- its technical documentation in the [README.txt](README.txt) file, with the Installation instructions
 
 ## License
 
