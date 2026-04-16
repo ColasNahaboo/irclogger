@@ -76,13 +76,13 @@ emitcache() {
 emitstream() { if [ "$gzip" = on ]; then gzip -$GCF; else cat; fi; }
 
 if [ -z "$date" ]; then 
-  echo "Location: $CHAN?date=`date -u +'%Y-%m-%d,%a'`";echo
+  echo "Location: $CHAN?date=`date -u +%Y-%m-%d,%a`";echo
 fi
-case "$date" in *,*):;;*)date="`date -d $date +'%Y-%m-%d,%a'`";;esac
+case "$date" in *,*):;;*)date="`date -d $date +%Y-%m-%d,%a`";;esac
 log=$date.log
 if [ ! -e $log ]; then 
   log=$date.log.gz
-  if [ ! -e $log ]; then error_ file_not_found
+  if [ ! -e $log ]; then error_file_not_found
   fi
 fi
 
